@@ -165,3 +165,287 @@ void impr_exec(EXEC* tmp) {
     fprintf(stderr, "B_path: %d\n", tmp->ban_path);
     fprintf(stderr, "Path  : %s\n", tmp->path);
 }
+
+MKFS nuevo_mkfs()
+{
+    MKFS tmp;
+    tmp.ban_id = 0;
+    tmp.ban_fs = 0;
+    tmp.ban_type = 0;
+    tmp.ban_error = 0;
+    for(int i = 0; i < 10; i++)
+    {
+        tmp.id[i] = '\0';
+    }
+    return tmp;
+}
+
+LOGIN nuevo_login()
+{
+    LOGIN tmp;
+    tmp.ban_usr = 0;
+    tmp.ban_pwd = 0;
+    tmp.ban_id = 0;
+    tmp.ban_error = 0;
+    for (int i = 0; i < 12; i++)
+    {
+        tmp.usr[i] = '\0';
+        tmp.pwd[i] = '\0';
+        tmp.id[i] = '\0';
+    }
+    return tmp;
+}
+
+LOGOUT nuevo_logout()
+{
+    LOGOUT tmp;
+    tmp.ban_logout = 0;
+    tmp.ban_error =0;
+    return tmp;
+}
+
+MKGRP nuevo_mkgrp()
+{
+    MKGRP tmp;
+    tmp.ban_name = 0;
+    tmp.ban_error = 0;
+    for (int i = 0; i < 12; i++)
+    {
+        tmp.name[i] = '\0';
+    }
+    return tmp;
+}
+
+RMGRP nuevo_rmgrp()
+{
+    RMGRP tmp;
+    tmp.ban_name = 0;
+    tmp.ban_error = 0;
+    for (int i = 0; i < 12; i++)
+    {
+        tmp.name[i] = '\0';
+    }
+    return tmp;
+}
+
+MKUSR nuevo_mkusr()
+{
+    MKUSR tmp;
+    tmp.ban_usr = 0;
+    tmp.ban_pwd = 0;
+    tmp.ban_grp = 0;
+    tmp.ban_error = 0;
+    for (int i = 0; i < 12; i++)
+    {
+        tmp.usr[i] = '\0';
+        tmp.pwd[i] = '\0';
+        tmp.grp[i] = '\0';
+    }
+    return tmp;
+}
+
+RMUSR nuevo_rmusr()
+{
+    RMUSR tmp;
+    tmp.ban_usr = 0;
+    tmp.ban_error = 0;
+    for (int i = 0; i < 12; i++)
+    {
+        tmp.usr[i] = '\0';
+    }
+    return tmp;
+}
+
+CHMOD nuevo_chmod()
+{
+    CHMOD tmp;
+    tmp.ban_path = 0;
+    tmp.ban_ugo = 0;
+    tmp.ban_r = 0;
+    tmp.ban_error = 0;
+    for (int i = 0; i < 255; i++)
+    {
+        tmp.path[i] = '\0';
+        if (i < 3)
+        {
+            tmp.ugo[i] = '\0';
+        }
+    }
+    return tmp;
+}
+
+MKFILE nuevo_mkfile()
+{
+    MKFILE tmp;
+    tmp.ban_path = 0;
+    tmp.ban_p = 0;
+    tmp.ban_size = 0;
+    tmp.ban_cont = 0;
+    tmp.size = 0;
+    tmp.ban_error = 0;
+    for (int i = 0; i < 255; i++)
+    {
+        tmp.path[i] = '\0';
+        tmp.cont[i] = '\0';
+    }
+    return tmp;
+}
+
+CAT nuevo_cat()
+{
+    CAT tmp;
+    tmp.ban_file = 0;
+    tmp.ban_error = 0;
+    for(int i = 0; i < 255; i++)
+    {
+        tmp.path[i] = '\0';
+    }
+    return tmp;
+}
+
+REM nuevo_rem() {
+    REM tmp;
+    tmp.ban_path = 0;
+    tmp.ban_error = 0;
+    for (int i = 0; i < 255; i++)
+    {
+        tmp.path[i] = '\0';
+    }
+    return tmp;
+}
+
+EDIT nuevo_edit() {
+    EDIT tmp;
+    tmp.ban_path = 0;
+    tmp.ban_cont = 0;
+    tmp.ban_error = 0;
+    for (int i = 0; i < 12; i++)
+    {
+        tmp.path[i] = '\0';
+        tmp.cont[i] = '\0';
+    }
+    return tmp;
+}
+
+REN nuevo_ren() {
+    REN tmp;
+    tmp.ban_path = 0;
+    tmp.ban_name = 0;
+    tmp.ban_error = 0;
+    for (int i = 0; i < 255; i++)
+    {
+        tmp.path[i] = '\0';
+        if (i < 100)
+        {
+            tmp.name[i] = '\0';
+        }
+    }
+    return tmp;
+}
+
+MKDIR nuevo_mkdir() {
+    MKDIR tmp;
+    tmp.ban_path = 0;
+    tmp.ban_p = 0;
+    tmp.ban_error = 0;
+    for (int i = 0; i < 255; i++)
+    {
+        tmp.path[i] = '\0';
+    }
+    return tmp;
+}
+
+CP nuevo_cp() {
+    CP tmp;
+    tmp.ban_path = 0;
+    tmp.ban_dest = 0;
+    tmp.ban_error = 0;
+    for (int i = 0; i < 255; i++)
+    {
+        tmp.path[i] = '\0';
+        tmp.dest[i] = '\0';
+    }
+    return tmp;
+}
+
+MV nuevo_mv() {
+    MV tmp;
+    tmp.ban_path = 0;
+    tmp.ban_dest = 0;
+    tmp.ban_error = 0;
+    for (int i = 0; i < 255; i++)
+    {
+        tmp.path[i] = '\0';
+        tmp.dest[i] = '\0';
+    }
+    return tmp;
+}
+
+FIND nuevo_find()
+{
+    FIND tmp;
+    tmp.ban_path = 0;
+    tmp.ban_name = 0;
+    tmp.ban_error = 0;
+    for (int i = 0; i < 255; i++)
+    {
+        tmp.path[i] = '\0';
+        if (i < 100)
+        {
+            tmp.name[i] = '\0';
+        }
+    }
+    return tmp;
+}
+
+CHOWN nuevo_chown() {
+    CHOWN tmp;
+    tmp.ban_path = 0;
+    tmp.ban_r = 0;
+    tmp.ban_usr = 0;
+    tmp.ban_error = 0;
+    for (int i = 0; i < 255; i++)
+    {
+        tmp.path[i] = '\0';
+        if (i < 12)
+        {
+            tmp.usr[i] = '\0';
+        }
+    }
+    return tmp;
+}
+
+CHGRP nuevo_chgrp() {
+    CHGRP tmp;
+    tmp.ban_usr = 0;
+    tmp.ban_grp = 0;
+    tmp.ban_error = 0;
+    for (int i = 0; i < 12; i++)
+    {
+        tmp.usr[i] = '\0';
+        tmp.grp[i] = '\0';
+    }
+    return tmp;
+}
+
+RECOVERY nuevo_recovery() {
+    RECOVERY tmp;
+    tmp.ban_id = 0;
+    tmp.ban_error = 0;
+    for (int i; i < 10; i++)
+    {
+        tmp.id[i] = '\0';
+    }
+    return tmp;
+}
+
+LOSS nuevo_loss() {
+    LOSS tmp;
+    tmp.ban_id = 0;
+    tmp.ban_error = 0;
+    for (int i; i < 10; i++)
+    {
+        tmp.id[i] = '\0';
+    }
+    return tmp;
+}
