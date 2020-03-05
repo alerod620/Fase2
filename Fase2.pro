@@ -23,7 +23,8 @@ SOURCES += main.cpp \
     leer_entrada.cpp \
     main.cpp \
     reporte.cpp \
-    validar_comando.cpp
+    validar_comando.cpp \
+    escribir_disco.cpp
 
 SUBDIRS += \
     Fase2.pro
@@ -39,4 +40,5 @@ HEADERS += \
     estructuras.h \
     leer_entrada.h \
     reporte.h \
-    validar_comando.h
+    validar_comando.h \
+    escribir_disco.h

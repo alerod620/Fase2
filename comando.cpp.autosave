@@ -1053,5 +1053,5 @@ void get_ugo(char valor[], int* ban)
 
 MKFS parametros_mkfs(char parametro[])
 {
-
+    
 }

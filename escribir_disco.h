@@ -1,0 +1,7 @@
+#ifndef ESCRIBIR_DISCO_H
+#define ESCRIBIR_DISCO_H
+
+
+
+
+#endif // ESCRIBIR_DISCO_H

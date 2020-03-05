@@ -106,6 +106,90 @@ void ejecutar_comando(char comando[],char parametros[]){
     {
         exit(EXIT_FAILURE);
     }
+    else if(strcmp(comando, "MKFS") == 0) //Comandos de la fase 2
+    {
+
+    }
+    else if(strcmp(comando, "LOGIN") == 0)
+    {
+
+    }
+    else if(strcmp(comando, "LOGOUT") == 0)
+    {
+
+    }
+    else if(strcmp(comando, "MKGRP") == 0)
+    {
+
+    }
+    else if(strcmp(comando, "RMGRP") == 0)
+    {
+
+    }
+    else if(strcmp(comando, "MKUSR") == 0)
+    {
+
+    }
+    else if(strcmp(comando, "RMUSR") == 0)
+    {
+
+    }
+    else if(strcmp(comando, "CHMOD") == 0)
+    {
+
+    }
+    else if(strcmp(comando, "MKFILE") == 0)
+    {
+
+    }
+    else if(strcmp(comando, "CAT") == 0)
+    {
+
+    }
+    else if(strcmp(comando, "REM") == 0)
+    {
+
+    }
+    else if(strcmp(comando, "EDIT") == 0)
+    {
+
+    }
+    else if(strcmp(comando, "REN") == 0)
+    {
+
+    }
+    else if(strcmp(comando, "MKDIR") == 0)
+    {
+
+    }
+    else if(strcmp(comando, "CP") == 0)
+    {
+
+    }
+    else if(strcmp(comando, "MV") == 0)
+    {
+
+    }
+    else if(strcmp(comando, "FIND") == 0)
+    {
+
+    }
+    else if(strcmp(comando, "CHOWN") == 0)
+    {
+
+    }
+    else if(strcmp(comando, "CHGRP") == 0)
+    {
+
+    }
+    else if(strcmp(comando, "RECOVERY") == 0)
+    {
+
+    }
+    else if(strcmp(comando, "LOSS") == 0)
+    {
+
+    }
     else
     {
         fprintf(stderr, "********** COMANDO %s NO RECONOCIDO **********\n",comando);
