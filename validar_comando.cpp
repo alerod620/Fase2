@@ -1017,3 +1017,58 @@ int aumentar_primaria(MBR *tmp_mbr, int no_part, int tam_aumentar)
         break;
     }
 }
+
+
+
+/*
+******************************************************************************
+*********************************** FASE 2 ***********************************
+******************************************************************************
+*/
+
+void log_mount(MOUNT *tmp_mount) {
+    FILE *ARCHIVO;
+
+    ARCHIVO = fopen(tmp_mount->path, "rb+");
+
+    if (ARCHIVO == NULL) {
+        mensaje("ERROR CON PATH");
+    } else {
+        SUPER_BLOQUE tmp_super_bloque;
+        PARTICION tmp_particion = buscar_particion_montada(tmp_mount);
+
+        fseek(ARCHIVO, tmp_particion.part_start, SEEK_SET);
+        fread(&tmp_super_bloque, sizeof (SUPER_BLOQUE), 1, ARCHIVO);
+
+        tmp_super_bloque.s_mtime = get_now();
+        tmp_super_bloque.s_mnt_count++;
+
+        fseek(ARCHIVO, tmp_particion.part_start, SEEK_SET);
+        fwrite(&tmp_super_bloque, sizeof (SUPER_BLOQUE), 1, ARCHIVO);
+
+        fclose(ARCHIVO);
+    }
+}
+
+void log_unmount(MOUNT *tmp_mount) {
+    FILE *ARCHIVO;
+
+    ARCHIVO = fopen(tmp_mount->path, "rb+");
+
+    if (ARCHIVO == NULL) {
+        mostrar_mensaje("ERROR CON PATH");
+    } else {
+        SUPER_BLOQUE tmp_super_bloque;
+        PARTICION tmp_particion = buscar_particion_montada(tmp_mount);
+
+        fseek(ARCHIVO, tmp_particion.part_start, SEEK_SET);
+        fread(&tmp_super_bloque, sizeof (SUPER_BLOQUE), 1, ARCHIVO);
+
+        tmp_super_bloque.s_umtime = get_now();
+
+        fseek(ARCHIVO, tmp_particion.part_start, SEEK_SET);
+        fwrite(&tmp_super_bloque, sizeof (SUPER_BLOQUE), 1, ARCHIVO);
+
+        fclose(ARCHIVO);
+    }
+}

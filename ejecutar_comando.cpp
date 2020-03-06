@@ -691,11 +691,15 @@ void ejecutar_mount(MOUNT* tmp)
                                     indice = (j + 1) % 10;
                                     part_memoria[i].PART_MONTADA[j].id[3] = '1';
                                     part_memoria[i].PART_MONTADA[j].id[4] = indice + '0';
-                                } else if ((j + 1) > 19 && (j + 1) < 29) {
+                                }
+                                else if ((j + 1) > 19 && (j + 1) < 29)
+                                {
                                     indice = (j + 1) % 10;
                                     part_memoria[i].PART_MONTADA[j].id[3] = '2';
                                     part_memoria[i].PART_MONTADA[j].id[4] = indice + '0';
-                                } else {
+                                }
+                                else
+                                {
                                     part_memoria[i].PART_MONTADA[j].id[3] = (j + 1) + '0';
                                 }
 
@@ -991,4 +995,16 @@ void aumentar(FDISK* tmp) {
         fwrite(&tmp_mbr, sizeof (MBR), 1, archivo);
         fclose(archivo);
     }
+}
+
+
+/*
+******************************************************************************
+*********************************** FASE 2 ***********************************
+******************************************************************************
+*/
+
+void ejecutar_mkfs(MKFS *tmp)
+{
+    MOUNT tmp_mount = existe_particion_montada(tmp->id, part_memoria);
 }

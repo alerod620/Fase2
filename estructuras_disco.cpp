@@ -184,3 +184,99 @@ void impr_part(PARTICION* tmp)
         fprintf(stderr, "---------------------------------\n");
     }
 }
+
+
+
+/*
+******************************************************************************
+*********************************** FASE 2 ***********************************
+******************************************************************************
+*/
+
+SUPER_BLOQUE new_super_bloque() {
+    SUPER_BLOQUE tmp;
+    tmp.s_filesystem_type = 0;
+    tmp.s_inodes_count = 0;
+    tmp.s_blocks_count = 0;
+    tmp.s_free_blocks_count = 0;
+    tmp.s_free_inodes_count = 0;
+    tmp.s_mtime = NULL;
+    tmp.s_umtime = NULL;
+    tmp.s_mnt_count = 0;
+    tmp.s_magic = 0;
+    tmp.s_inode_size = 0;
+    tmp.s_block_size = 0;
+    tmp.s_first_ino = 0;
+    tmp.s_first_blo = 0;
+    tmp.s_bm_inode_start = 0;
+    tmp.s_bm_block_start = 0;
+    tmp.s_inode_start = 0;
+    tmp.s_block_start = 0;
+    return tmp;
+}
+
+INODO new_inodo() {
+    INODO tmp;
+    tmp.i_uid = 0;
+    tmp.i_gid = 0;
+    tmp.i_size = 0;
+    tmp.i_atime = NULL;
+    tmp.i_ctime = NULL;
+    tmp.i_mtime = NULL;
+    for (int i = 0; i < 15; i++)
+        tmp.i_block[i] = -1;
+    tmp.i_type = '\0';
+    tmp.i_perm = 0;
+    return tmp;
+}
+
+CONTENT new_content() {
+    CONTENT tmp;
+    for (int i = 0; i < 12; i++)
+        tmp.b_name[i] = '\0';
+    tmp.b_inodo = -1;
+    return tmp;
+}
+
+BLOQUE_CARPETA new_bloque_carpeta() {
+    BLOQUE_CARPETA tmp;
+    for (int i = 0; i < 4; i++)
+        tmp.b_content[i] = new_content();
+    return tmp;
+}
+
+BLOQUE_ARCHIVO new_bloque_archivo() {
+    BLOQUE_ARCHIVO tmp;
+    for (int i = 0; i < 64; i++)
+        tmp.b_content[i] = '\0';
+    return tmp;
+}
+
+BLOQUE_APUNTADOR new_bloque_apuntador() {
+    BLOQUE_APUNTADOR tmp;
+    for (int i = 0; i < 16; i++)
+        tmp.b_pointers[i] = -1;
+    return tmp;
+}
+
+USUARIO_SISTEMA new_usuario_sistema() {
+    USUARIO_SISTEMA tmp;
+    tmp.flag_usuario = 0;
+    tmp.numero_usuario = 0;
+    tmp.numero_grupo = 0;
+    for (int i = 0; i < 12; i++) {
+        tmp.grupo[i] = '\0';
+        tmp.nombre[i] = '\0';
+        tmp.password[i] = '\0';
+        tmp.id_particion[i] = '\0';
+    }
+    return tmp;
+}
+
+MI_ARCHIVO new_archivo() {
+    MI_ARCHIVO tmp;
+    tmp.existe_archivo = 0;
+    for (int i = 0; i < 5000; i++)
+        tmp.contenido[i] = '\0';
+    return tmp;
+}
