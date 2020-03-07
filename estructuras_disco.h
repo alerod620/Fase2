@@ -159,7 +159,7 @@ typedef struct mi_archivo
     char contenido[5000];
 } MI_ARCHIVO;
 
-MI_ARCHIVO new_archivo();
+MI_ARCHIVO nuevo_archivo();
 
 
 #endif // ESTRUCTURAS_DISCO_H

@@ -730,6 +730,9 @@ void ejecutar_unmount(UNMOUNT* tmp)
 
                 if (strcmp(part_memoria[i].PART_MONTADA[j].id, tmp->id) == 0)
                 {
+                    MOUNT tmp_mount = particion_montada(tmp->id, part_memoria);
+                    log_unmount(&tmp_mount);
+
                     //Limpia el id de la particion
                     part_memoria[i].PART_MONTADA[j].ban_ocupado = 0;
                     part_memoria[i].PART_MONTADA[j].id[0] = '\0';
@@ -1006,5 +1009,78 @@ void aumentar(FDISK* tmp) {
 
 void ejecutar_mkfs(MKFS *tmp)
 {
-    MOUNT tmp_mount = existe_particion_montada(tmp->id, part_memoria);
+    MOUNT tmp_mount = particion_montada(tmp->id, part_memoria);
+
+    MOUNT_USUARIO = tmp_mount;
+
+    if(tmp_mount.ban_error == 1)
+    {
+        mensaje("LA PARTICION NO ESTA MONTADA");
+    }
+    else
+    {
+        FILE *ARCHIVO;
+        MBR tmp_mbr;
+        PARTICION tmp_particion;
+        char caracter = '0';
+
+        ARCHIVO = fopen(tmp_mount.path, "rb+");
+
+        if(ARCHIVO == NULL)
+        {
+            mensaje("ERROR CON RUTA");
+        }
+        else
+        {
+            fseek(ARCHIVO, 0, SEEK_SET);
+            fread(&tmp_mbr, sizeof(MBR), 1, ARCHIVO);
+
+            for(int i = 0; i < 4; i++)
+            {
+                if (strcmp(tmp_mbr.mbr_particion[i].name, tmp_mount.name) == 0)
+                {
+                    tmp_particion = tmp_mbr.mbr_particion[i];
+
+                    SUPER_BLOQUE tmp_super_bloque;
+
+                    fseek(ARCHIVO, tmp_particion.start, SEEK_SET);
+                    fread(&tmp_super_bloque, sizeof (SUPER_BLOQUE), 1, ARCHIVO);
+
+                    if (tmp_super_bloque.s_filesystem_type == 0)
+                    {
+                        formatear_particion(tmp->ban_fs, &tmp_particion, &tmp_super_bloque);
+                        fseek(ARCHIVO, tmp_particion.start, SEEK_SET);
+                        fwrite(&tmp_super_bloque, sizeof (SUPER_BLOQUE), 1, ARCHIVO);
+
+                        fseek(ARCHIVO, tmp_super_bloque.s_bm_inode_start, SEEK_SET);
+
+                        for (int j = 0; j < tmp_super_bloque.s_inodes_count; j++)
+                        {
+                            fwrite(&caracter, sizeof (char), 1, ARCHIVO);
+                        }
+
+                        fseek(ARCHIVO, tmp_super_bloque.s_block_start, SEEK_SET);
+
+                        for (int j = 0; j < tmp_super_bloque.s_blocks_count; j++)
+                        {
+                            fwrite(&caracter, sizeof (char), 1, ARCHIVO);
+                        }
+
+                        fclose(ARCHIVO);
+
+                        escribir_inodo_carpeta(&tmp_mount, "/", 1, 1, '0', 664);
+                        escribir_inodo_archivo(&tmp_mount, "/users.txt", "1, G, root  \n1, U, root  , root  , 123  \n2, G, usuario   \n2, U, usuario, chicas, chicas123\n", 1, 1, '1', 664);
+                        fprintf(stderr, "FORMATEO EXITOSO\n");
+                        return;
+                    }
+                    else
+                    {
+                        fprintf(stderr, "PARTICION ESTA FORMATIADA\n");
+                        break;
+                    }
+                }
+            }
+        }
+
+    }
 }
