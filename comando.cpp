@@ -1052,6 +1052,395 @@ void get_ugo(char valor[], int* ban)
     *ban = 1;
 }
 
+
+void mkfs(char parametro[])
+{
+    MKFS tmp = parametros_mkfs(parametro);
+
+    if (tmp.ban_error == 0)
+    {
+
+        if (tmp.ban_id == 0)
+        {
+            mensaje("ERROR DEBE DE INGRESAR UN ID");
+        }
+        else
+        {
+            ejecutar_mkfs(&tmp);
+            //print_mkfs(&tmp);
+        }
+    }
+
+}
+
+void login(char parametro[])
+{
+    LOGIN tmp = parametros_login(parametro);
+
+    if (tmp.ban_error == 0)
+    {
+
+        if (tmp.ban_id == 1 && tmp.ban_pwd == 1 && tmp.ban_usr == 1)
+        {
+            ejecutar_login(&tmp);
+        }
+        else
+        {
+            mensaje("ERROR FALTA PARAMETROS");
+        }
+    }
+
+}
+
+void logout(char parametro[]) {
+    LOGOUT tmp = parametros_logout(parametro);
+
+    if (tmp.ban_error == 0)
+    {
+        ejecutar_logout(&tmp);
+    }
+
+}
+
+void mkgrp(char parametro[]) {
+    MKGRP tmp = parametros_mkgrp(parametro);
+
+    if (tmp.ban_error == 0)
+    {
+
+        if (tmp.ban_name == 0)
+        {
+            mensaje("ERROR FALTA PARAMETRO NAME");
+        }
+        else
+        {
+            //print_mkgrp(&tmp);
+        }
+    }
+
+}
+
+void rmgrp(char parametro[])
+{
+    RMGRP tmp = parametros_rmgrp(parametro);
+
+    if (tmp.ban_error == 0)
+    {
+
+        if (tmp.ban_name == 0)
+        {
+            mensaje("ERROR FALTA EL PARAMETRO NAME");
+        }
+        else
+        {
+            //print_rmgrp(&tmp);
+        }
+    }
+
+}
+
+void mkusr(char parametro[]) {
+    MKUSR tmp = parametros_mkusr(parametro);
+
+    if (tmp.ban_error == 0)
+    {
+
+        if (tmp.ban_usr == 1 && tmp.ban_pwd == 1 && tmp.ban_grp == 1)
+        {
+            //print_mkusr(&tmp);
+        }
+        else
+        {
+            mensaje("ERROR HACE FALTA PARAMETROS");
+        }
+    }
+
+}
+
+void rmusr(char parametro[])
+{
+    RMUSR tmp = parametros_rmusr(parametro);
+
+    if (tmp.ban_error == 0)
+    {
+        if (tmp.ban_usr == 0)
+        {
+            mensaje("ERROR HACE FALTA EL PARAMETRO USR");
+        }
+        else
+        {
+            //print_rmusr(&tmp);
+        }
+    }
+
+}
+
+void chmod(char parametro[])
+{
+    CHMOD tmp = parametros_chmod(parametro);
+
+    if (tmp.ban_error == 0)
+    {
+
+        if (tmp.ban_path == 1 && tmp.ban_ugo == 1)
+        {
+            //print_chmod(&tmp);
+        }
+        else
+        {
+            mensaje("ERROR HACE FALTA PARAMETROS");
+        }
+    }
+
+}
+
+void mkfile(char parametro[])
+{
+    MKFILE tmp = parametros_mkfile(parametro);
+
+    if (tmp.ban_error == 0)
+    {
+
+        if (tmp.ban_path == 0)
+        {
+            mensaje("ERROR HACE FALTA EL PARAMETRO PATH");
+        }
+        else
+        {
+            ejecutar_mkfile(&tmp);
+            //print_mkfile(&tmp);
+        }
+    }
+
+}
+
+void cat(char parametro[])
+{
+    CAT tmp = parametros_cat(parametro);
+
+    if (tmp.ban_error == 0)
+    {
+
+        if (tmp.ban_file == 0)
+        {
+            mensaje("ERROR FALTA EL PARAMETRO FILE-N");
+        }
+        else
+        {
+            //print_cat(&tmp);
+        }
+    }
+}
+
+void rem(char parametro[])
+{
+    REM tmp = parametros_rem(parametro);
+
+    if (tmp.ban_error == 0)
+    {
+
+        if(tmp.ban_path == 0)
+        {
+            mensaje("ERROR FALTA EL PARAMETRO PATH");
+        }
+        else
+        {
+            //print_rem(&tmp);
+        }
+    }
+
+}
+
+void edit(char parametro[])
+{
+    EDIT tmp = parametros_edit(parametro);
+
+    if (tmp.ban_error == 0)
+    {
+
+        if(tmp.ban_path == 0 || tmp.ban_cont == 0)
+        {
+            mensaje("ERROR FALTA EL PARAMETRO PATH");
+        }
+        else
+        {
+
+            //print_edit
+        }
+    }
+
+}
+
+void ren(char parametro[])
+{
+    REN tmp = parametros_ren(parametro);
+
+    if (tmp.ban_error == 0)
+    {
+
+        if(tmp.ban_path == 1 && tmp.ban_name == 1)
+        {
+            //print_ren(&tmp);
+        }
+        else
+        {
+            mensaje("ERROR HACE FALTA PARAMETROS");
+        }
+    }
+
+}
+
+void mkdir(char parametro[])
+{
+    MKDIR tmp = parametros_mkdir(parametro);
+
+    if (tmp.ban_error == 0)
+    {
+
+        if(tmp.ban_path == 0)
+        {
+            mensaje("ERROR HACE FALTA EL PARAMETRO PATH");
+        }
+        else
+        {
+            ejecutar_mkdir(&tmp);
+        }
+    }
+
+}
+
+void cp(char parametro[])
+{
+    CP tmp = parametros_cp(parametro);
+
+    if (tmp.ban_error == 0)
+    {
+        if(tmp.ban_path == 1 && tmp.ban_dest == 1)
+        {
+            //print_cp(&tmp);
+        }
+        else
+        {
+            mensaje("ERROR HACE FALTA PARAMETROS");
+        }
+    }
+
+}
+
+void mv(char parametro[])
+{
+    MV tmp = parametros_mv(parametro);
+
+    if (tmp.ban_error == 0)
+    {
+        if(tmp.ban_path == 1 && tmp.ban_dest == 1)
+        {
+            //print_mv(&tmp);
+        }
+        else
+        {
+            mensaje("ERROR HACE FALTA PARAMETROS");
+        }
+    }
+
+}
+
+void find(char parametro[])
+{
+    FIND tmp = parametros_find(parametro);
+
+    if (tmp.ban_error == 0)
+    {
+
+        if(tmp.ban_path == 1 && tmp.ban_name == 1)
+        {
+            //print_find(&tmp);
+        }
+        else
+        {
+            mensaje("ERROR HACE FALTA PARAMETROS");
+        }
+    }
+
+}
+
+void chown(char parametro[])
+{
+    CHOWN tmp = parametros_chown(parametro);
+
+    if (tmp.ban_error == 0)
+    {
+
+        if(tmp.ban_path == 1 && tmp.ban_usr == 1)
+        {
+            print_chown(&tmp);
+        }
+        else
+        {
+            mensaje("ERROR HACE FALTA PARAMETROS");
+        }
+    }
+
+}
+
+void chgrp(char parametro[])
+{
+    CHGRP tmp = parametros_chgrp(parametro);
+
+    if (tmp.ban_error == 0)
+    {
+
+        if(tmp.ban_usr ==  1 && tmp.ban_grp == 1)
+        {
+            //print_chgrp(&tmp);
+        }
+        else
+        {
+            mensaje("ERROR HACE FALTA PARAMETROS");
+        }
+    }
+
+}
+
+void recovery(char parametro[])
+{
+    RECOVERY tmp = parametros_recovery(parametro);
+
+    if (tmp.ban_error == 0)
+    {
+
+        if(tmp.ban_id == 0)
+        {
+            mensaje("ERROR HACE FALTA ID DE PARTICION");
+        }
+        else
+        {
+            //print_recovery(&tmp);
+        }
+    }
+
+}
+
+void loss(char parametro[])
+{
+    LOSS tmp = parametros_loss(parametro);
+
+    if (tmp.ban_error == 0)
+    {
+
+        if(tmp.ban_id == 0)
+        {
+            mensaje("ERROR HACE FALTA ID DE PARTICION");
+        }
+        else
+        {
+            //print_loss(&tmp);
+        }
+    }
+
+}
+
+
 MKFS parametros_mkfs(char parametro[])
 {
     MKFS tmp = nuevo_mkfs();
@@ -1111,7 +1500,7 @@ MKFS parametros_mkfs(char parametro[])
     return tmp;
 }
 
-LOGIN analizar_parametros_login(char parametro[])
+LOGIN parametros_login(char parametro[])
 {
     LOGIN tmp = nuevo_login();
     iniciar_buffer(parametro);
@@ -1162,7 +1551,7 @@ LOGIN analizar_parametros_login(char parametro[])
     return tmp;
 }
 
-LOGOUT analizar_parametros_logout(char parametro[])
+LOGOUT parametros_logout(char parametro[])
 {
     LOGOUT tmp = nuevo_logout();
     iniciar_buffer(parametro);
@@ -1187,7 +1576,7 @@ LOGOUT analizar_parametros_logout(char parametro[])
     return tmp;
 }
 
-MKGRP analizar_parametros_mkgrp(char parametro[])
+MKGRP parametros_mkgrp(char parametro[])
 {
     MKGRP tmp = nuevo_mkgrp();
     iniciar_buffer(parametro);
@@ -1227,7 +1616,7 @@ MKGRP analizar_parametros_mkgrp(char parametro[])
     return tmp;
 }
 
-RMGRP analizar_parametros_rmgrp(char parametro[])
+RMGRP parametros_rmgrp(char parametro[])
 {
     RMGRP tmp = nuevo_rmgrp();
     iniciar_buffer(parametro);
@@ -1270,7 +1659,7 @@ RMGRP analizar_parametros_rmgrp(char parametro[])
     return tmp;
 }
 
-MKUSR analizar_parametros_mkusr(char parametro[])
+MKUSR parametros_mkusr(char parametro[])
 {
     MKUSR tmp = nuevo_mkusr();
     iniciar_buffer(parametro);
@@ -1321,7 +1710,7 @@ MKUSR analizar_parametros_mkusr(char parametro[])
     return tmp;
 }
 
-RMUSR analizar_parametros_rmusr(char parametro[])
+RMUSR parametros_rmusr(char parametro[])
 {
     RMUSR tmp = nuevo_rmusr();
     iniciar_buffer(parametro);
@@ -1364,7 +1753,7 @@ RMUSR analizar_parametros_rmusr(char parametro[])
     return tmp;
 }
 
-CHMOD analizar_parametros_chmod(char parametro[])
+CHMOD parametros_chmod(char parametro[])
 {
     CHMOD tmp = nuevo_chmod();
     iniciar_buffer(parametro);
@@ -1422,7 +1811,7 @@ CHMOD analizar_parametros_chmod(char parametro[])
     return tmp;
 }
 
-MKFILE analizar_parametros_mkfile(char parametro[])
+MKFILE parametros_mkfile(char parametro[])
 {
     MKFILE tmp = nuevo_mkfile();
     iniciar_buffer(parametro);
@@ -1484,7 +1873,7 @@ MKFILE analizar_parametros_mkfile(char parametro[])
     return tmp;
 }
 
-CAT analizar_parametros_cat(char parametro[])
+CAT parametros_cat(char parametro[])
 {
     CAT tmp = nuevo_cat();
     iniciar_buffer(parametro);
@@ -1527,7 +1916,7 @@ CAT analizar_parametros_cat(char parametro[])
     return tmp;
 }
 
-REM analizar_parametros_rem(char parametro[])
+REM parametros_rem(char parametro[])
 {
     REM tmp = nuevo_rem();
     iniciar_buffer(parametro);
@@ -1570,7 +1959,7 @@ REM analizar_parametros_rem(char parametro[])
     return tmp;
 }
 
-EDIT analizar_parametros_edit(char parametro[])
+EDIT parametros_edit(char parametro[])
 {
     EDIT tmp = nuevo_edit();
     iniciar_buffer(parametro);
@@ -1617,7 +2006,7 @@ EDIT analizar_parametros_edit(char parametro[])
     return tmp;
 }
 
-REN analizar_parametros_ren(char parametro[])
+REN parametros_ren(char parametro[])
 {
     REN tmp = nuevo_ren();
     iniciar_buffer(parametro);
@@ -1664,7 +2053,7 @@ REN analizar_parametros_ren(char parametro[])
     return tmp;
 }
 
-MKDIR analizar_parametros_mkdir(char parametro[])
+MKDIR parametros_mkdir(char parametro[])
 {
     MKDIR tmp = nuevo_mkdir();
     iniciar_buffer(parametro);
@@ -1717,7 +2106,7 @@ MKDIR analizar_parametros_mkdir(char parametro[])
     return tmp;
 }
 
-CP analizar_parametros_cp(char parametro[])
+CP parametros_cp(char parametro[])
 {
     CP tmp = nuevo_cp();
     iniciar_buffer(parametro);
@@ -1764,7 +2153,7 @@ CP analizar_parametros_cp(char parametro[])
     return tmp;
 }
 
-MV analizar_parametros_mv(char parametro[])
+MV parametros_mv(char parametro[])
 {
     MV tmp = nuevo_mv();
     iniciar_buffer(parametro);
@@ -1811,7 +2200,7 @@ MV analizar_parametros_mv(char parametro[])
     return tmp;
 }
 
-FIND analizar_parametros_find(char parametro[])
+FIND parametros_find(char parametro[])
 {
     FIND tmp = nuevo_find();
     iniciar_buffer(parametro);
@@ -1858,7 +2247,7 @@ FIND analizar_parametros_find(char parametro[])
     return tmp;
 }
 
-CHOWN analizar_parametros_chown(char parametro[])
+CHOWN parametros_chown(char parametro[])
 {
     CHOWN tmp = nuevo_chown();
     iniciar_buffer(parametro);
@@ -1916,7 +2305,7 @@ CHOWN analizar_parametros_chown(char parametro[])
     return tmp;
 }
 
-CHGRP analizar_parametros_chgrp(char parametro[])
+CHGRP parametros_chgrp(char parametro[])
 {
     CHGRP tmp = nuevo_chgrp();
     iniciar_buffer(parametro);
@@ -1963,7 +2352,7 @@ CHGRP analizar_parametros_chgrp(char parametro[])
     return tmp;
 }
 
-RECOVERY analizar_parametros_recovery(char parametro[])
+RECOVERY parametros_recovery(char parametro[])
 {
     RECOVERY tmp = nuevo_recovery();
     iniciar_buffer(parametro);
@@ -2006,7 +2395,7 @@ RECOVERY analizar_parametros_recovery(char parametro[])
     return tmp;
 }
 
-LOSS analizar_parametros_loss(char parametro[])
+LOSS parametros_loss(char parametro[])
 {
     LOSS tmp = nuevo_loss();
     iniciar_buffer(parametro);
