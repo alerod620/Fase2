@@ -44,10 +44,10 @@ time_t obtener();
 char* formato_fecha(time_t);
 int id_random();
 
-BUFFER_CONT_DISK nuevo_buffer();
-MBR nuevo_mbr(int tam, int fit);
-PARTICION nuevo_part(char status, char type, char fit, int start, int size);
-EBR nuevo_ebr(char status, char fit, int start, int size);
+BUFFER_CONT_DISK new_buffer();
+MBR new_mbr(int tam, int fit);
+PARTICION new_part(char status, char type, char fit, int start, int size);
+EBR new_ebr(char status, char fit, int start, int size);
 
 void impr_mbr(MBR* tmp);
 void impr_ebr(int pos_inicio, char disco[]);
@@ -126,12 +126,12 @@ typedef struct bloque_apuntador {
     int b_pointers[16];
 } BLOQUE_APUNTADOR;
 
-SUPER_BLOQUE nuevo_super_bloque();
-INODO nuevo_inodo();
-CONTENT nuevo_content();
-BLOQUE_CARPETA nuevo_bloque_carpeta();
-BLOQUE_ARCHIVO nuevo_bloque_archivo();
-BLOQUE_APUNTADOR nuevo_bloque_apuntador();
+SUPER_BLOQUE new_super_bloque();
+INODO new_inodo();
+CONTENT new_content();
+BLOQUE_CARPETA new_bloque_carpeta();
+BLOQUE_ARCHIVO new_bloque_archivo();
+BLOQUE_APUNTADOR new_bloque_apuntador();
 
 //USUARIO LOGIADO
 
@@ -159,7 +159,7 @@ typedef struct mi_archivo
     char contenido[5000];
 } MI_ARCHIVO;
 
-MI_ARCHIVO nuevo_archivo();
+MI_ARCHIVO new_archivo();
 
 
 #endif // ESTRUCTURAS_DISCO_H

@@ -150,7 +150,7 @@ typedef struct login
 {
     char usr[12];
     char pwd[12];
-    char fs[12];
+    char id[12];
     int ban_usr;
     int ban_pwd;
     int ban_id;

@@ -13,21 +13,6 @@ BLOQUE_CARPETA TMP_CARPETA;
 BLOQUE_ARCHIVO TMP_ARCHIVO;
 BLOQUE_APUNTADOR TMP_APUNTADOR;
 
-char contenido[10000];
-int tam_contenido;
-char file_name[1024];
-
-char caracter_archivo;
-
-char path_contenido[1024];
-char tmp_path_inodo[1024];
-int indice_path_contenido;
-int num_bloque_inodo;
-int num_bloque_apuntador;
-
-int indice_contenido;
-int existe_inodo;
-
 void buscar_inodo_carpeta(int numero_ino, char name[]);
 void limpiar_variables_buscar_inodo();
 void nombre_inodo();

@@ -13,6 +13,21 @@ Los valores de la variable existe nodo sirve para:
 
 */
 
+char contenido[10000];
+int tam_contenido;
+char file_name[1024];
+
+char caracter_archivo;
+
+char path_contenido[1024];
+char tmp_path_inodo[1024];
+int indice_path_contenido;
+int num_bloque_inodo;
+int num_bloque_apuntador;
+
+int indice_contenido;
+int existe_inodo;
+
 
 void limpiar_variables_buscar_inodo()
 {
@@ -300,7 +315,7 @@ void escribir_inodo_carpeta(MOUNT* particion, char* path_cont, int i_uid, int i_
 
         if (SUPER_BLOQUE_PARTICION.s_first_ino == 0) {
             //NO HAY INODOS EN EL SISTEMA DE ARCHIVOS
-            TMP_INODO = nuevo_inodo();
+            TMP_INODO = new_inodo();
             TMP_INODO.i_uid = i_uid;
             TMP_INODO.i_gid = i_gid;
             TMP_INODO.i_size = tam_contenido;
@@ -317,7 +332,7 @@ void escribir_inodo_carpeta(MOUNT* particion, char* path_cont, int i_uid, int i_
             buscar_inodo_carpeta(0, tmp_path_inodo);
             actualizar_inodo_bloque_carpeta();
 
-            TMP_INODO = nuevo_inodo();
+            TMP_INODO = new_inodo();
             TMP_INODO.i_uid = i_uid;
             TMP_INODO.i_gid = i_gid;
             TMP_INODO.i_size = tam_contenido;
@@ -346,7 +361,7 @@ void escribir_inodo_carpeta(MOUNT* particion, char* path_cont, int i_uid, int i_
 
 void escribir_bloque_carpeta(int inodo_padre, int inodo_actual, int numero_apuntador)
 {
-    TMP_CARPETA = nuevo_bloque_carpeta();
+    TMP_CARPETA = new_bloque_carpeta();
 
     if (numero_apuntador == 0) {
         TMP_CARPETA.b_content[0].b_inodo = inodo_actual;
@@ -438,7 +453,7 @@ void actualizar_inodo_bloque_carpeta()
 
 void escribir_bloque_apuntador_carpeta(int numero_apuntador_de_inodo, int inodo_padre, int inodo_actual)
 {
-    TMP_APUNTADOR = nuevo_bloque_apuntador();
+    TMP_APUNTADOR = new_bloque_apuntador();
 
     TMP_APUNTADOR.b_pointers[0] = SUPER_BLOQUE_PARTICION.s_first_blo + 1;
 
@@ -481,7 +496,7 @@ void escribir_inodo_archivo(MOUNT* particion, char* path_cont, char* cont, int i
         buscar_inodo_carpeta(0, tmp_path_inodo);
         actualizar_inodo_bloque_carpeta();
 
-        TMP_INODO = nuevo_inodo();
+        TMP_INODO = new_inodo();
         TMP_INODO.i_uid = i_uid;
         TMP_INODO.i_gid = i_gid;
         TMP_INODO.i_size = tam_contenido;
@@ -508,7 +523,7 @@ void escribir_inodo_archivo(MOUNT* particion, char* path_cont, char* cont, int i
             if (TMP_INODO.i_block[12] == -1) {
                 TMP_INODO.i_block[12] = SUPER_BLOQUE_PARTICION.s_first_blo;
 
-                TMP_APUNTADOR = nuevo_bloque_apuntador();
+                TMP_APUNTADOR = new_bloque_apuntador();
                 caracter_archivo = '1';
                 actualizar_bm_bloques(caracter_archivo, SUPER_BLOQUE_PARTICION.s_first_blo);
                 actualizar_bloque_apuntador(TMP_INODO.i_block[12]);
@@ -537,7 +552,7 @@ void escribir_inodo_archivo(MOUNT* particion, char* path_cont, char* cont, int i
                 if (TMP_INODO.i_block[13] == -1) {
                     TMP_INODO.i_block[13] = SUPER_BLOQUE_PARTICION.s_first_blo;
 
-                    TMP_APUNTADOR = nuevo_bloque_apuntador();
+                    TMP_APUNTADOR = new_bloque_apuntador();
                     CARACTER_FILE = '1';
                     actualizar_bm_bloques(CARACTER_FILE, SUPER_BLOQUE_PARTICION.s_first_blo);
                     actualizar_bloque_apuntador(TMP_INODO.i_block[12]);
@@ -554,7 +569,7 @@ void escribir_inodo_archivo(MOUNT* particion, char* path_cont, char* cont, int i
                                 tmp_apuntador.b_pointers[i] = SUPER_BLOQUE_PARTICION.s_first_blo;
                                 actualizar_bloque_apuntador(TMP_INODO.i_block[13]);
 
-                                TMP_APUNTADOR = nuevo_bloque_apuntador();
+                                TMP_APUNTADOR = new_bloque_apuntador();
                                 CARACTER_FILE = '1';
                                 actualizar_bm_bloques(CARACTER_FILE, SUPER_BLOQUE_PARTICION.s_first_blo);
                                 actualizar_bloque_apuntador(tmp_apuntador.b_pointers[i]);
@@ -597,7 +612,7 @@ void escribir_inodo_archivo(MOUNT* particion, char* path_cont, char* cont, int i
 }
 
 void escribir_bloque_archivo() {
-    TMP_ARCHIVO = nuevo_bloque_archivo();
+    TMP_ARCHIVO = new_bloque_archivo();
 
     for (int i = 0; i < 64; i++)
     {
@@ -637,7 +652,7 @@ MI_ARCHIVO buscar_archivo_disco(MOUNT* particion, char* path_cont)
     nombre_inodo();
     buscar_inodo_archivo(0, tmp_path_inodo);
 
-    MI_ARCHIVO tmp = nuevo_archivo();
+    MI_ARCHIVO tmp = new_archivo();
 
     if (existe_inodo == 3)
     {
@@ -658,7 +673,7 @@ MI_ARCHIVO buscar_archivo_disco(MOUNT* particion, char* path_cont)
 
 MI_ARCHIVO obtener_contenido_archivo_lectura()
 {
-    MI_ARCHIVO tmp = nuevo_archivo();
+    MI_ARCHIVO tmp = new_archivo();
     BLOQUE_ARCHIVO tmp_b_a;
     BLOQUE_APUNTADOR tmp_b_ap;
     int posicion = 0;

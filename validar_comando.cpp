@@ -1031,9 +1031,12 @@ void log_mount(MOUNT *tmp_mount) {
 
     ARCHIVO = fopen(tmp_mount->path, "rb+");
 
-    if (ARCHIVO == NULL) {
+    if (ARCHIVO == NULL)
+    {
         mensaje("ERROR CON PATH");
-    } else {
+    }
+    else
+    {
         SUPER_BLOQUE tmp_super_bloque;
         PARTICION tmp_particion = buscar_particion_montada(tmp_mount);
 
@@ -1070,5 +1073,539 @@ void log_unmount(MOUNT *tmp_mount) {
         fwrite(&tmp_super_bloque, sizeof (SUPER_BLOQUE), 1, ARCHIVO);
 
         fclose(ARCHIVO);
+    }
+}
+
+PARTICION buscar_particion_montada(MOUNT *tmp) {
+    FILE *ARCHIVO;
+    PARTICION tmp_particion;
+
+    ARCHIVO = fopen(tmp->path, "rb");
+
+    if (ARCHIVO == NULL)
+    {
+        mensaje("ERROR CON RUTA");
+    }
+    else
+    {
+        MBR tmp_mbr;
+        fseek(ARCHIVO, 0, SEEK_SET);
+        fread(&tmp_mbr, sizeof (MBR), 1, ARCHIVO);
+        for (int i = 0; i < 4; i++)
+        {
+
+            if (strcmp(tmp_mbr.mbr_particion[i].name, tmp->name) == 0)
+            {
+                tmp_particion = tmp_mbr.mbr_particion[i];
+                fclose(ARCHIVO);
+                return tmp_particion;
+            }
+        }
+
+        //VALIDAR SI ES LOGICA
+        for (int i = 0; i < 4; i++)
+        {
+            if (tmp_mbr.mbr_particion[i].type == 'E')
+            {
+                EBR tmp_ebr;
+                int posicion_inicio = tmp_mbr.mbr_particion[i].start;
+
+                while (1)
+                {
+                    fseek(ARCHIVO, posicion_inicio, SEEK_SET);
+                    fread(&tmp_ebr, sizeof (EBR), 1, ARCHIVO);
+
+                    if (strcmp(tmp_ebr.name, tmp->name) == 0)
+                    {
+                        fclose(ARCHIVO);
+                        tmp_particion = tmp_mbr.mbr_particion[i];
+
+                        tmp_particion.start = tmp_ebr.start + sizeof (EBR);
+                        tmp_particion.fit = tmp_ebr.fit;
+                        strcpy(tmp_particion.name, tmp_ebr.name);
+                        tmp_particion.status = tmp_ebr.status;
+                        tmp_particion.size = tmp_ebr.size;
+                        tmp_particion.type = 'L';
+
+                        return tmp_particion;
+                    }
+                    else
+                    {
+                        if (tmp_ebr.next == -1)
+                        {
+                            mensaje("LA PARTICION NO EXISTE");
+                            fclose(ARCHIVO);
+                            tmp_particion = new_part('0', '0', '0', 0, 0);
+                            return tmp_particion;
+                        }
+                        else
+                        {
+                            posicion_inicio = tmp_ebr.next;
+                        }
+                    }
+                }
+            }
+        }
+        fclose(ARCHIVO);
+    }
+
+    tmp_particion = new_part('0', '0', '0', 0, 0);
+    return tmp_particion;
+}
+
+int numero_estructuras(int tam_particion, int tipo_formato)
+{
+    double tmp;
+
+    if (tipo_formato == 1)
+    {
+        tmp = (tam_particion - sizeof (SUPER_BLOQUE)) / (4 + sizeof (INODO) + (3 * sizeof (BLOQUE_CARPETA)));
+    }
+    else
+    {
+        tmp = (tam_particion - sizeof (SUPER_BLOQUE)) / (4 + sizeof (JOURNALING) + sizeof (INODO) + (3 * sizeof (BLOQUE_CARPETA)));
+    }
+
+    return (int) tmp;
+}
+
+void formatear_particion(int ban_fs, PARTICION* tmp_particion, SUPER_BLOQUE* tmp_super_bloque)
+{
+    int numero = numero_estructuras(tmp_particion->size, ban_fs);
+    tmp_super_bloque->s_filesystem_type = ban_fs;
+    tmp_super_bloque->s_inodes_count = numero;
+    tmp_super_bloque->s_blocks_count = (3 * numero);
+    tmp_super_bloque->s_free_inodes_count = numero;
+    tmp_super_bloque->s_free_blocks_count = (3 * numero);
+    tmp_super_bloque->s_magic = 0xEF53;
+    tmp_super_bloque->s_inode_size = sizeof (INODO);
+    tmp_super_bloque->s_block_size = sizeof (BLOQUE_ARCHIVO);
+    tmp_super_bloque->s_first_ino = 0;
+    tmp_super_bloque->s_first_blo = 0;
+    tmp_super_bloque->s_bm_inode_start = tmp_particion->start + sizeof (SUPER_BLOQUE) + 1;
+    tmp_super_bloque->s_bm_block_start = tmp_super_bloque->s_bm_inode_start + numero + 1;
+    tmp_super_bloque->s_inode_start = tmp_super_bloque->s_bm_block_start + (3 * numero) + 1;
+    tmp_super_bloque->s_block_start = tmp_super_bloque->s_inode_start + (numero * sizeof (INODO)) + 1;
+}
+
+LOGIN obtener_usuario(char contenido[], int *posicion)
+{
+    LOGIN tmp = nuevo_login();
+
+    int numero_comas = 0;
+    char buffer[15];
+    int puntero_buffer = 0;
+    int puntero_contenido = *posicion;
+    int usuario_grupo = 0;
+
+    for (int i = 0; i < 15; i++)
+    {
+        buffer[i] = '\0';
+    }
+
+    if (contenido[puntero_contenido] == '\0')
+    {
+        tmp.ban_error = 1;
+        return;
+    }
+    else
+    {
+
+        while (contenido[puntero_contenido] != '\0')
+        {
+
+            if (contenido[puntero_contenido] == ' ')
+            {
+                puntero_contenido++;
+            }
+            else if (contenido[puntero_contenido] == ',' || contenido[puntero_contenido] == '\n')
+            {
+                //EVALUAR CONTENIDO
+                if (numero_comas == 0)
+                {
+
+                    usuario_grupo = atoi(buffer);
+
+                    for (int i = 0; i < 15; i++)
+                    {
+                        buffer[i] = '\0';
+                    }
+
+                    puntero_buffer = 0;
+
+                    puntero_contenido++;
+                    numero_comas++;
+                }
+                else if (numero_comas == 1)
+                {
+                    //USUARIO O GRUPO
+                    if (strcmp(buffer, "G") == 0)
+                    {
+
+                        for (int i = 0; i < 15; i++)
+                        {
+                            buffer[i] = '\0';
+                        }
+
+                        puntero_buffer = 0;
+
+                        while (contenido[puntero_contenido] != '\n')
+                        {
+                            puntero_contenido++;
+                        }
+
+                        puntero_contenido++;
+                        numero_comas = 0;
+
+                    }
+                    else
+                    {
+
+                        for (int i = 0; i < 15; i++)
+                        {
+                            buffer[i] = '\0';
+                        }
+
+                        puntero_buffer = 0;
+
+                        puntero_contenido++;
+                        numero_comas++;
+                    }
+                }
+                else if (numero_comas == 2)
+                {
+                    strcpy(tmp.id, buffer);
+
+                    for (int i = 0; i < 15; i++)
+                    {
+                        buffer[i] = '\0';
+                    }
+
+                    puntero_buffer = 0;
+
+                    puntero_contenido++;
+                    numero_comas++;
+                }
+                else if (numero_comas == 3)
+                {
+                    tmp.ban_usr = usuario_grupo;
+                    strcpy(tmp.usr, buffer);
+
+                    for (int i = 0; i < 15; i++)
+                    {
+                        buffer[i] = '\0';
+                    }
+
+                    puntero_buffer = 0;
+
+                    puntero_contenido++;
+                    numero_comas++;
+                }
+                else if (numero_comas == 4)
+                {
+                    strcpy(tmp.pwd, buffer);
+
+                    while (contenido[puntero_contenido] != '\n')
+                    {
+                        puntero_contenido++;
+                    }
+                    *posicion = puntero_contenido;
+
+                    obtener_grupo_usuario(contenido, tmp.id, &tmp.ban_id);
+
+                    return tmp;
+                }
+            }
+            else
+            {
+                buffer[puntero_buffer] = contenido[puntero_contenido];
+                puntero_contenido++;
+                puntero_buffer++;
+            }
+        }
+    }
+}
+
+void obtener_usuario_login(LOGIN* tmp_usuario, char contenido[], LOGIN* tmp)
+{
+    int numero_comas = 0;
+    char buffer[15];
+    int puntero_buffer = 0;
+    int puntero_contenido = 0;
+    int usuario_grupo = 0;
+
+    for (int i = 0; i < 15; i++)
+    {
+        buffer[i] = '\0';
+    }
+
+    if (contenido[puntero_contenido] == '\0')
+    {
+        tmp->ban_error = 1;
+        return;
+    }
+    else
+    {
+
+        while (contenido[puntero_contenido] != '\0')
+        {
+
+            if (contenido[puntero_contenido] == ' ')
+            {
+                puntero_contenido++;
+            }
+            else if (contenido[puntero_contenido] == ',' || contenido[puntero_contenido] == '\n')
+            {
+                //EVALUAR CONTENIDO
+                if (numero_comas == 0)
+                {
+
+                    usuario_grupo = atoi(buffer);
+
+                    for (int i = 0; i < 15; i++)
+                    {
+                        buffer[i] = '\0';
+                    }
+
+                    puntero_buffer = 0;
+
+                    puntero_contenido++;
+                    numero_comas++;
+                }
+                else if (numero_comas == 1)
+                {
+                    //USUARIO O GRUPO
+                    if (strcmp(buffer, "G") == 0)
+                    {
+
+                        for (int i = 0; i < 15; i++)
+                        {
+                            buffer[i] = '\0';
+                        }
+
+                        puntero_buffer = 0;
+
+                        while (contenido[puntero_contenido] != '\n')
+                        {
+                            puntero_contenido++;
+                        }
+
+                        puntero_contenido++;
+                        numero_comas = 0;
+
+                    }
+                    else
+                    {
+
+                        for (int i = 0; i < 15; i++)
+                        {
+                            buffer[i] = '\0';
+                        }
+
+                        puntero_buffer = 0;
+
+                        puntero_contenido++;
+                        numero_comas++;
+                    }
+                }
+                else if (numero_comas == 2)
+                {
+                    strcpy(tmp->id, buffer);
+
+                    for (int i = 0; i < 15; i++)
+                    {
+                        buffer[i] = '\0';
+                    }
+                    puntero_buffer = 0;
+
+                    puntero_contenido++;
+                    numero_comas++;
+                }
+                else if (numero_comas == 3)
+                {
+                    tmp->ban_usr = usuario_grupo;
+                    strcpy(tmp->usr, buffer);
+
+                    for (int i = 0; i < 15; i++)
+                    {
+                        buffer[i] = '\0';
+                    }
+
+                    puntero_buffer = 0;
+
+                    puntero_contenido++;
+                    numero_comas++;
+                }
+                else if (numero_comas == 4)
+                {
+                    strcpy(tmp->pwd, buffer);
+
+                    while (contenido[puntero_contenido] != '\n')
+                    {
+                        puntero_contenido++;
+                    }
+                    puntero_contenido++;
+
+                    if (strcmp(tmp_usuario->usr, tmp->usr) == 0)
+                    {
+
+                        if (strcmp(tmp_usuario->pwd, tmp->pwd) == 0)
+                        {
+                            obtener_grupo_usuario(contenido, tmp->id, &tmp->ban_id);
+                            return tmp;
+                        }
+                        else
+                        {
+                            numero_comas = 0;
+                            puntero_buffer = 0;
+                            usuario_grupo = 0;
+
+                            for (int i = 0; i < 15; i++)
+                            {
+
+                                if (i < 12)
+                                {
+                                    tmp->usr[i] = '\0';
+                                    tmp->pwd[i] = '\0';
+                                }
+                                buffer[i] = '\0';
+                            }
+                        }
+                    }
+                    else
+                    {
+                        numero_comas = 0;
+                        puntero_buffer = 0;
+                        usuario_grupo = 0;
+
+                        for (int i = 0; i < 15; i++)
+                        {
+
+                            if (i < 12)
+                            {
+                                tmp->usr[i] = '\0';
+                                tmp->pwd[i] = '\0';
+                                tmp->id[i] = '\0';
+                            }
+                            buffer[i] = '\0';
+                        }
+                    }
+                }
+            }
+            else
+            {
+                buffer[puntero_buffer] = contenido[puntero_contenido];
+                puntero_contenido++;
+                puntero_buffer++;
+            }
+        }
+    }
+}
+
+void obtener_grupo_usuario(char contenido[], char nombre_grupo[], int* ban_grupo)
+{
+    int numero_comas = 0;
+    char buffer[15];
+    int puntero_buffer = 0;
+    int puntero_contenido = 0;
+    int numero_grupo = 0;
+
+    for (int i = 0; i < 15; i++)
+    {
+        buffer[i] = '\0';
+    }
+
+    while (contenido[puntero_contenido] != '\0')
+    {
+
+        if (contenido[puntero_contenido] == ' ')
+        {
+            puntero_contenido++;
+        }
+        else if (contenido[puntero_contenido] == ',' || contenido[puntero_contenido] == '\n')
+        {
+            //EVALUAR CONTENIDO
+            if (numero_comas == 0)
+            {
+                numero_grupo = atoi(buffer);
+
+                for (int i = 0; i < 15; i++)
+                {
+                    buffer[i] = '\0';
+                }
+
+                puntero_buffer = 0;
+
+                puntero_contenido++;
+                numero_comas++;
+            }
+            else if (numero_comas == 1)
+            {
+                //USUARIO O GRUPO
+                if (strcmp(buffer, "G") == 0)
+                {
+
+                    for (int i = 0; i < 15; i++)
+                    {
+                        buffer[i] = '\0';
+                    }
+
+                    puntero_buffer = 0;
+                    puntero_contenido++;
+                    numero_comas++;
+                }
+                else
+                {
+
+                    for (int i = 0; i < 15; i++)
+                    {
+                        buffer[i] = '\0';
+                    }
+
+                    puntero_buffer = 0;
+
+                    while (contenido[puntero_contenido] != '\n')
+                    {
+                        puntero_contenido++;
+                    }
+
+                    puntero_contenido++;
+                    numero_comas = 0;
+                }
+            }
+            else if (numero_comas == 2)
+            {
+
+                if (strcmp(buffer, nombre_grupo) == 0)
+                {
+                    *ban_grupo = numero_grupo;
+                    return;
+                }
+                else
+                {
+
+                    for (int i = 0; i < 15; i++)
+                    {
+                        buffer[i] = '\0';
+                    }
+
+                    puntero_buffer = 0;
+
+                    while (contenido[puntero_contenido] != '\n')
+                    {
+                        puntero_contenido++;
+                    }
+
+                    puntero_contenido++;
+                    numero_comas = 0;
+                }
+            }
+        }
+        else
+        {
+            buffer[puntero_buffer] = contenido[puntero_contenido];
+            puntero_contenido++;
+            puntero_buffer++;
+        }
     }
 }

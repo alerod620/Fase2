@@ -23,6 +23,8 @@ void mayusculas(char *cadena)
     }
 }
 
+
+
 void iniciar_buffer(char* parametro)
 {
     caracter = 0;
@@ -483,6 +485,8 @@ void exec(char parametro[])
         }
     }
 }
+
+
 
 MKDISK parametros_mkdisk(char parametro[])
 {
@@ -1047,7 +1051,7 @@ void get_ugo(char valor[], int* ban)
     *ban = 1;
 }
 
-MKFS parametros_mkfs(char parametros[])
+MKFS parametros_mkfs(char parametro[])
 {
-
+    
 }
