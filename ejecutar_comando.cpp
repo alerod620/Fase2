@@ -12,9 +12,18 @@
 #include <comando.h>
 #include <validar_comando.h>
 #include <reporte.h>
+#include <escribir_disco.h>
 
 PARTICIONES_MONTADAS part_memoria[26];
 int ban_part_memoria = 0;
+
+/*
+****************************
+********** FASE 2 **********
+****************************
+*/
+USUARIO_SISTEMA LOGIN_USUARIO;
+MOUNT MOUNT_USUARIO;
 
 void ini_particiones_memoria()
 {
@@ -636,7 +645,7 @@ void ejecutar_mount(MOUNT* tmp)
     FILE *archivo;
     MBR tmp_mbr;
 
-    if (existe_part(tmp) == 1)
+    if (part(tmp) == 1)
     {
         archivo = fopen(tmp->path, "rb");
 
@@ -1075,12 +1084,371 @@ void ejecutar_mkfs(MKFS *tmp)
                     }
                     else
                     {
-                        fprintf(stderr, "PARTICION ESTA FORMATIADA\n");
+                        fprintf(stderr, "LA PARTICION ESTA FORMATEADA\n");
                         break;
                     }
                 }
             }
         }
 
+    }
+}
+
+void ejecutar_login(LOGIN* tmp)
+{
+    if (LOGIN_USUARIO.ban_usuario == 0)
+    {
+        MOUNT tmp_mount = particion_montada(tmp->id, part_memoria);
+        MI_ARCHIVO archivo;
+
+        if (tmp_mount.ban_error == 1)
+        {
+            mensaje("LA PARTICION NO ESTA MONTADA");
+        }
+        else
+        {
+            archivo = buscar_archivo_disco(&tmp_mount, "/users.txt");
+            if (archivo.archivo == 1)
+            {
+                LOGIN tmp_sistema = nuevo_login();
+                int posicion = 0;
+                //tmp_sistema = obtener_usuario(archivo.contenido, &posicion);
+                obtener_usuario_login(tmp, archivo.contenido, &tmp_sistema);
+
+                if (tmp_sistema.ban_error == 0)
+                {
+                    LOGIN_USUARIO.ban_usuario = 1;
+                    LOGIN_USUARIO.numero_usuario = tmp_sistema.ban_usr;
+                    LOGIN_USUARIO.numero_grupo = tmp_sistema.ban_id;
+                    strcpy(LOGIN_USUARIO.grupo, tmp_sistema.id);
+                    strcpy(LOGIN_USUARIO.nombre, tmp_sistema.usr);
+                    strcpy(LOGIN_USUARIO.password, tmp_sistema.pwd);
+                    strcpy(LOGIN_USUARIO.id_particion, tmp->id);
+                    LOGIN_USUARIO.mount_particion = tmp_mount;
+                    LOGIN_USUARIO.particion_uso = buscar_particion_montada(&tmp_mount);
+                    fprintf(stderr, "\nBIENVENIDO %s\n", LOGIN_USUARIO.nombre);
+                }
+            }
+        }
+    }
+
+}
+
+void ejecutar_logout(LOGOUT* tmp)
+{
+    if (LOGIN_USUARIO.ban_usuario == 0)
+    {
+        mensaje("NO HAY USUARIO EN SISTEMA");
+    }
+    else
+    {
+        LOGIN_USUARIO.ban_usuario = 0;
+        LOGIN_USUARIO.numero_usuario = 0;
+        LOGIN_USUARIO.numero_grupo = 0;
+        fprintf(stderr, "/n Cerrando sesion de %s\n", LOGIN_USUARIO.nombre);
+    }
+}
+
+void ejecutar_mkgrp(MKGRP* tmp) {
+
+}
+
+void ejecutar_rmgrp(RMGRP* tmp) {
+
+}
+
+void ejecutar_mkusr(MKUSR* tmp) {
+
+}
+
+void ejecutar_rmusr(RMUSR* tmp) {
+
+}
+
+void ejecutar_chmod(CHMOD* tmp) {
+
+}
+
+void ejecutar_mkfile(MKFILE* tmp)
+{
+    if (LOGIN_USUARIO.ban_usuario == 0)
+    {
+        mensaje("DEBE DE INICIAR SECCION");
+    }
+    else
+    {
+        char contenido[10000];
+        int posicion = 0;
+
+        for (int i = 0; i < 10000; i++)
+        {
+            contenido[i] = '\0';
+        }
+
+        if (tmp->ban_cont == 1)
+        {
+            FILE* archivo_pc;
+            char caracter;
+            archivo_pc = fopen(tmp->cont, "r");
+
+            if (archivo_pc == NULL)
+            {
+                mensaje("NO SE PUDO ABRIR ARCHIVO");
+            }
+            else
+            {
+
+                while ((caracter = fgetc(archivo_pc)) != EOF)
+                {
+                    contenido[posicion] = caracter;
+                    posicion++;
+                }
+                fclose(archivo_pc);
+            }
+        }
+        else if (tmp->ban_size == 1)
+        {
+            int numero = 0;
+
+            for (int i = 0; i < tmp->size; i++)
+            {
+                switch (numero)
+                {
+                    case 0:
+                        contenido[i] = '0';
+                        numero = 1;
+                        break;
+                    case 1:
+                        contenido[i] = '1';
+                        numero = 2;
+                        break;
+                    case 2:
+                        contenido[i] = '2';
+                        numero = 3;
+                        break;
+                    case 3:
+                        contenido[i] = '3';
+                        numero = 4;
+                        break;
+                    case 4:
+                        contenido[i] = '4';
+                        numero = 5;
+                        break;
+                    case 5:
+                        contenido[i] = '5';
+                        numero = 6;
+                        break;
+                    case 6:
+                        contenido[i] = '6';
+                        numero = 7;
+                        break;
+                    case 7:
+                        contenido[i] = '7';
+                        numero = 8;
+                        break;
+                    case 8:
+                        contenido[i] = '8';
+                        numero = 9;
+                        break;
+                    case 9:
+                        contenido[i] = '9';
+                        numero = 0;
+                        break;
+                }
+            }
+        }
+        escribir_inodo_archivo(&MOUNT_USUARIO, tmp->path, contenido, LOGIN_USUARIO.numero_usuario, LOGIN_USUARIO.numero_grupo, '1', 664);
+    }
+}
+
+void ejecutar_cat(CAT* tmp) {
+
+}
+
+void ejecutar_rem(REM* tmp) {
+
+}
+
+void ejecutar_edit(EDIT* tmp) {
+
+}
+
+void ejecutar_ren(REN* tmp) {
+
+}
+
+void ejecutar_mkdir(MKDIR* tmp)
+{
+    if (LOGIN_USUARIO.ban_usuario == 0)
+    {
+        mensaje("DEBE DE INICIAR SECCION");
+    }
+    else
+    {
+        escribir_inodo_carpeta(&MOUNT_USUARIO, tmp->path, LOGIN_USUARIO.numero_usuario, LOGIN_USUARIO.numero_grupo, '0', 664);
+    }
+}
+
+void ejecutar_cp(CP* tmp) {
+
+}
+
+void ejecutar_mv(MV* tmp) {
+
+}
+
+void ejecutar_find(FIND* tmp) {
+
+}
+
+void ejecutar_chown(CHOWN* tmp) {
+
+}
+
+void ejecutar_chgrp(CHGRP* tmp) {
+
+}
+
+void ejecutar_recovery(RECOVERY* tmp) {
+
+}
+
+void ejecutar_loss(LOSS* tmp) {
+
+}
+
+void ejecutar_rep_bm_bloques(REP* tmp)
+{
+    FILE* ARCHIVO;
+    PARTICION tmp_particion;
+    SUPER_BLOQUE tmp_super_bloque;
+    MOUNT tmp_mount = particion_montada(tmp->id, part_memoria);
+    validar_dir(tmp->path);
+
+    if (tmp_mount.ban_error == 1)
+    {
+        mensaje("LA PARTICION NO ESTA MONTADA");
+    }
+    else
+    {
+        tmp_particion = buscar_particion_montada(&tmp_mount);
+
+        ARCHIVO = fopen(tmp_mount.path, "rb");
+        fseek(ARCHIVO, tmp_particion.start, SEEK_SET);
+        fread(&tmp_super_bloque, sizeof (SUPER_BLOQUE), 1, ARCHIVO);
+
+        if (tmp_super_bloque.s_filesystem_type == 0)
+        {
+            mensaje("ERROR LA PARTICION NO TIENE FORMATO\n");
+        }
+        else
+        {
+            reporte_bm_bloques(tmp_mount.path, tmp_super_bloque.s_bm_block_start, tmp_super_bloque.s_blocks_count, tmp->path);
+        }
+    }
+}
+
+void ejecutar_rep_bm_inodos(REP* tmp)
+{
+    FILE* ARCHIVO;
+    PARTICION tmp_particion;
+    SUPER_BLOQUE tmp_super_bloque;
+    MOUNT tmp_mount = particion_montada(tmp->id, part_memoria);
+    validar_dir(tmp->path);
+
+    if (tmp_mount.ban_error == 1)
+    {
+        mensaje("ERROR NO SE ENCUENTRA MONTADA PARTICION");
+    }
+    else
+    {
+        tmp_particion = buscar_particion_montada(&tmp_mount);
+
+        ARCHIVO = fopen(tmp_mount.path, "rb");
+        fseek(ARCHIVO, tmp_particion.start, SEEK_SET);
+        fread(&tmp_super_bloque, sizeof (SUPER_BLOQUE), 1, ARCHIVO);
+
+        if (tmp_super_bloque.s_filesystem_type == 0)
+        {
+            mensaje("LA PARTICION NO TIENE FORMATO");
+        } else {
+            reporte_bm_inodos(tmp_mount.path, tmp_super_bloque.s_bm_inode_start, tmp_super_bloque.s_inodes_count, tmp->path);
+        }
+    }
+}
+
+void ejecutar_rep_sb(REP* tmp)
+{
+    FILE* ARCHIVO;
+    PARTICION tmp_particion;
+    SUPER_BLOQUE tmp_super_bloque;
+    MOUNT tmp_mount = particion_montada(tmp->id, part_memoria);
+    validar_dir(tmp->path);
+
+    if (tmp_mount.ban_error == 1)
+    {
+        mensaje("LA PARTICION NO ESTA MONTADA");
+    }
+    else
+    {
+        tmp_particion = buscar_particion_montada(&tmp_mount);
+
+        ARCHIVO = fopen(tmp_mount.path, "rb");
+        fseek(ARCHIVO, tmp_particion.start, SEEK_SET);
+        fread(&tmp_super_bloque, sizeof (SUPER_BLOQUE), 1, ARCHIVO);
+
+        if (tmp_super_bloque.s_filesystem_type == 0)
+        {
+            mensaje("LA PARTICION NO TIENE FORMATO");
+        } else {
+            reporte_sb(&tmp_super_bloque, tmp->path);
+        }
+    }
+}
+
+void ejecutar_rep_inodes(REP* tmp)
+{
+    PARTICION tmp_particion;
+    MOUNT tmp_mount = particion_montada(tmp->id, part_memoria);
+    validar_dir(tmp->path);
+    tmp_particion = buscar_particion_montada(&tmp_mount);
+    reporte_inodes(tmp_mount.path, tmp->path, tmp_particion.start);
+}
+
+void ejecutar_rep_blocks(REP* tmp)
+{
+    PARTICION tmp_particion;
+    MOUNT tmp_mount = particion_montada(tmp->id, part_memoria);
+    validar_dir(tmp->path);
+    tmp_particion = buscar_particion_montada(&tmp_mount);
+    reporte_blocks(tmp_mount.path, tmp->path, tmp_particion.start);
+}
+
+void ejecutar_rep_tree(REP* tmp)
+{
+    PARTICION tmp_particion;
+    MOUNT tmp_mount = particion_montada(tmp->id, part_memoria);
+    validar_dir(tmp->path);
+    tmp_particion = buscar_particion_montada(&tmp_mount);
+    reporte_tree(tmp_mount.path, tmp->path, tmp_particion.start);
+}
+
+void ejecutar_rep_file(REP* tmp)
+{
+    MOUNT tmp_mount = particion_montada(tmp->id, part_memoria);
+    MI_ARCHIVO archivo;
+
+    if (tmp_mount.ban_error == 1)
+    {
+        mensaje("ERROR PARTICION NO SE ENCUENTRA MONTADA");
+    }
+    else
+    {
+        archivo = buscar_archivo_disco(&tmp_mount, tmp->ruta);
+
+        if (archivo.archivo == 1)
+        {
+            reporte_file(tmp->path, archivo);
+        }
     }
 }
