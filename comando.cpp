@@ -5,6 +5,7 @@
 
 #include <comando.h>
 #include <ejecutar_comando.h>
+#include <validar_comando.h>
 
 int caracter;
 int pos_contenedor;
@@ -1053,5 +1054,997 @@ void get_ugo(char valor[], int* ban)
 
 MKFS parametros_mkfs(char parametro[])
 {
-    
+    MKFS tmp = nuevo_mkfs();
+    iniciar_buffer(parametro);
+
+    while (parametros[pos_contenedor] != '\0')
+    {
+        caracter = [pos_contenedor];
+
+        if(caracter != '=')
+        {
+
+            if (caracter > 0 && caracter != ' ' && caracter != '-')
+            {
+                nombre_parametro[pos_parametro] = caracter;
+                pos_parametro++;
+            }
+        }
+        else
+        {
+            pos_contenedor++;
+            nombre_parametro[pos_parametro] = '\0';
+            mayusculas(nombre_parametro);
+
+            if (strcmp(nombre_parametro, "ID") == 0)
+            {
+                get_path(tmp.id, &tmp.ban_id);
+            }
+            else if (strcmp(nombre_parametro, "TYPE") == 0)
+            {
+                get_formateo(&tmp.ban_type);
+            }
+            else if (strcmp(nombre_parametro, "FS") == 0)
+            {
+                get_fs(&tmp.ban_fs);
+            }
+            else
+            {
+                tmp.ban_error = 1;
+                parametro_error(nombre_parametro);
+                break;
+            }
+            limpiar_buffer(0);
+        }
+        pos_contenedor++;
+    }
+
+    if (tmp.ban_type == 0)
+    {
+        tmp.ban_type = 2;
+    }
+    if (tmp.ban_fs == 0)
+    {
+        tmp.ban_fs = 1;
+    }
+
+    return tmp;
+}
+
+LOGIN analizar_parametros_login(char parametro[])
+{
+    LOGIN tmp = nuevo_login();
+    iniciar_buffer(parametro);
+
+    while (parametros[pos_contenedor] != '\0')
+    {
+        caracter = parametros[pos_contenedor];
+
+        if (caracter != '=')
+        {
+
+            if (caracter > 0 && caracter != ' ' && caracter != '-')
+            {
+                nombre_parametro[pos_parametro] = caracter;
+                pos_parametro++;
+            }
+        }
+        else
+        {
+            pos_contenedor++;
+            nombre_parametro[pos_parametro] = '\0';
+            mayusculas(nombre_parametro);
+
+            if (strcmp(nombre_parametro, "ID") == 0)
+            {
+                get_id(tmp.id, &tmp.ban_id);
+            }
+            else if (strcmp(nombre_parametro, "USR") == 0)
+            {
+                get_usr(tmp.usr, &tmp.ban_usr);
+            }
+            else if (strcmp(nombre_parametro, "PWD") == 0)
+            {
+                get_pwd(tmp.pwd, &tmp.ban_pwd);
+            }
+            else
+            {
+                tmp.ban_error = 1;
+                parametro_error(nombre_parametro);
+                break;
+            }
+
+            limpiar_buffer(0);
+        }
+        pos_contenedor++;
+    }
+
+    return tmp;
+}
+
+LOGOUT analizar_parametros_logout(char parametro[])
+{
+    LOGOUT tmp = nuevo_logout();
+    iniciar_buffer(parametro);
+
+    while (parametros[pos_contenedor] != '\0')
+    {
+        caracter = parametros[pos_contenedor];
+
+        if (caracter != ' ' || caracter != '\n' || caracter != '\0')
+        {
+            tmp.ban_error = 1;
+            mensaje("parametros NO RECONOCIDOS EN COMANDO");
+        }
+        pos_contenedor++;
+    }
+
+    if (tmp.ban_error == 0)
+    {
+        tmp.ban_logout = 1;
+    }
+
+    return tmp;
+}
+
+MKGRP analizar_parametros_mkgrp(char parametro[])
+{
+    MKGRP tmp = nuevo_mkgrp();
+    iniciar_buffer(parametro);
+
+    while (parametros[pos_contenedor] != '\0')
+    {
+        caracter = parametros[pos_contenedor];
+
+        if(caracter != '=')
+        {
+
+            if (caracter > 0 && caracter != ' ' && caracter != '-')
+            {
+                nombre_parametro[pos_parametro] = caracter;
+                pos_parametro++;
+            }
+        }
+        else
+        {
+            pos_contenedor++;
+            nombre_parametro[pos_parametro] = '\0';
+            mayusculas(nombre_parametro);
+
+            if (strcmp(nombre_parametro, "NAME") == 0) {
+                get_name(tmp.name, &tmp.ban_name);
+            } else {
+                tmp.ban_error = 1;
+                parametro_error(nombre_parametro);
+                break;
+            }
+
+            limpiar_buffer(0);
+        }
+        pos_contenedor++;
+    }
+
+    return tmp;
+}
+
+RMGRP analizar_parametros_rmgrp(char parametro[])
+{
+    RMGRP tmp = nuevo_rmgrp();
+    iniciar_buffer(parametro);
+
+    while (parametros[pos_contenedor] != '\0')
+    {
+        caracter = parametros[pos_contenedor];
+
+        if (caracter != '=')
+        {
+
+            if (caracter > 0 && caracter != ' ' && caracter != '-')
+            {
+                nombre_parametro[pos_parametro] = caracter;
+                pos_parametro++;
+            }
+        }
+        else
+        {
+            pos_contenedor++;
+            nombre_parametro[pos_parametro] = '\0';
+            mayusculas(nombre_parametro);
+
+            if (strcmp(nombre_parametro, "NAME") == 0)
+            {
+                get_name(tmp.name, &tmp.ban_name);
+            }
+            else
+            {
+                tmp.ban_error = 1;
+                parametro_error(nombre_parametro);
+                break;
+            }
+
+            limpiar_buffer(0);
+        }
+        pos_contenedor++;
+    }
+
+    return tmp;
+}
+
+MKUSR analizar_parametros_mkusr(char parametro[])
+{
+    MKUSR tmp = nuevo_mkusr();
+    iniciar_buffer(parametro);
+
+    while (parametros[pos_contenedor] != '\0')
+    {
+        caracter = parametros[pos_contenedor];
+
+        if (caracter != '=')
+        {
+
+            if (caracter > 0 && caracter != ' ' && caracter != '-')
+            {
+                nombre_parametro[pos_parametro] = caracter;
+                pos_parametro++;
+            }
+        }
+        else
+        {
+            pos_contenedor++;
+            nombre_parametro[pos_parametro] = '\0';
+            mayusculas(nombre_parametro);
+
+            if (strcmp(nombre_parametro, "USR") == 0)
+            {
+                get_usr(tmp.usr, &tmp.ban_usr);
+            }
+            else if (strcmp(nombre_parametro, "PWD") == 0)
+            {
+                get_pwd(tmp.pwd, &tmp.ban_pwd);
+            }
+            else if (strcmp(nombre_parametro, "GRP") == 0)
+            {
+                get_grp(tmp.grp, &tmp.ban_grp);
+            }
+            else
+            {
+                tmp.ban_error = 1;
+                parametro_error(nombre_parametro);
+                break;
+            }
+
+            limpiar_buffer(0);
+        }
+        pos_contenedor++;
+    }
+
+    return tmp;
+}
+
+RMUSR analizar_parametros_rmusr(char parametro[])
+{
+    RMUSR tmp = nuevo_rmusr();
+    iniciar_buffer(parametro);
+
+    while (parametros[pos_contenedor] != '\0')
+    {
+        caracter = parametros[pos_contenedor];
+
+        if (caracter != '=')
+        {
+
+            if (caracter > 0 && caracter != ' ' && caracter != '-')
+            {
+                nombre_parametro[pos_parametro] = caracter;
+                pos_parametro++;
+            }
+        }
+        else
+        {
+            pos_contenedor++;
+            nombre_parametro[pos_parametro] = '\0';
+            mayusculas(nombre_parametro);
+
+            if (strcmp(nombre_parametro, "USR") == 0)
+            {
+                get_usr(tmp.usr, &tmp.ban_usr);
+            }
+            else
+            {
+                tmp.ban_error = 1;
+                parametro_error(nombre_parametro);
+                break;
+            }
+
+            limpiar_buffer(0);
+        }
+        pos_contenedor++;
+    }
+
+    return tmp;
+}
+
+CHMOD analizar_parametros_chmod(char parametro[])
+{
+    CHMOD tmp = nuevo_chmod();
+    iniciar_buffer(parametro);
+
+    while (parametros[pos_contenedor] != '\0')
+    {
+        caracter = parametros[pos_contenedor];
+
+        if (caracter != '=')
+        {
+
+            if (caracter > 0 && caracter != ' ' && caracter != '-' && caracter != '\n')
+            {
+                nombre_parametro[pos_parametro] = caracter;
+                pos_parametro++;
+            }
+            else if (caracter == ' ' || caracter == '\n')
+            {
+                nombre_parametro[pos_parametro] = '\0';
+                mayusculas(nombre_parametro);
+
+                if (strcmp(nombre_parametro, "R") == 0)
+                {
+                    tmp.ban_r = 1;
+                    limpiar_buffer(0);
+                }
+            }
+        }
+        else
+        {
+            pos_contenedor++;
+            nombre_parametro[pos_parametro] = '\0';
+            mayusculas(nombre_parametro);
+
+            if (strcmp(nombre_parametro, "PATH") == 0)
+            {
+                get_path(tmp.path, &tmp.ban_path);
+            }
+            else if (strcmp(nombre_parametro, "UGO") == 0)
+            {
+                get_ugo(tmp.ugo, &tmp.ban_ugo);
+            }
+            else
+            {
+                tmp.ban_error = 1;
+                parametro_error(nombre_parametro);
+                break;
+            }
+
+            limpiar_buffer(0);
+        }
+        pos_contenedor++;
+    }
+
+    return tmp;
+}
+
+MKFILE analizar_parametros_mkfile(char parametro[])
+{
+    MKFILE tmp = nuevo_mkfile();
+    iniciar_buffer(parametro);
+
+    while (parametros[pos_contenedor] != '\0')
+    {
+        caracter = parametros[pos_contenedor];
+
+        if (caracter != '=')
+        {
+
+            if (caracter > 0 && caracter != ' ' && caracter != '-' && caracter != '\n')
+            {
+                nombre_parametro[pos_parametro] = caracter;
+                pos_parametro++;
+            }
+            else if (caracter == ' ' || caracter == '\n')
+            {
+                nombre_parametro[pos_parametro] = '\0';
+                mayusculas(nombre_parametro);
+
+                if (strcmp(nombre_parametro, "P") == 0)
+                {
+                    tmp.ban_p = 1;
+                    limpiar_buffer(0);
+                }
+            }
+        }
+        else
+        {
+            pos_contenedor++;
+            nombre_parametro[pos_parametro] = '\0';
+            mayusculas(nombre_parametro);
+
+            if (strcmp(nombre_parametro, "PATH") == 0)
+            {
+                get_path(tmp.path, &tmp.ban_path);
+            }
+            else if (strcmp(nombre_parametro, "SIZE") == 0)
+            {
+                get_size(&tmp.size, &tmp.ban_size);
+            }
+            else if (strcmp(nombre_parametro, "CONT") == 0)
+            {
+                get_path(tmp.cont, &tmp.ban_cont);
+            }
+            else
+            {
+                tmp.ban_error = 1;
+                parametro_error(nombre_parametro);
+                break;
+            }
+
+            limpiar_buffer(0);
+        }
+        pos_contenedor++;
+    }
+
+    return tmp;
+}
+
+CAT analizar_parametros_cat(char parametro[])
+{
+    CAT tmp = nuevo_cat();
+    iniciar_buffer(parametro);
+
+    while (parametros[pos_contenedor] != '\0')
+    {
+        caracter = parametros[pos_contenedor];
+
+        if (caracter != '=')
+        {
+
+            if (caracter > 0 && caracter != ' ' && caracter != '-')
+            {
+                nombre_parametro[pos_parametro] = caracter;
+                pos_parametro++;
+            }
+        }
+        else
+        {
+            pos_contenedor++;
+            nombre_parametro[pos_parametro] = '\0';
+            mayusculas(nombre_parametro);
+
+            if (strcmp(nombre_parametro, "FILE") == 0)
+            {
+                get_path(tmp.path, &tmp.ban_file);
+            }
+            else
+            {
+                tmp.ban_error = 1;
+                parametro_error(nombre_parametro);
+                break;
+            }
+
+            limpiar_buffer(0);
+        }
+        pos_contenedor++;
+    }
+
+    return tmp;
+}
+
+REM analizar_parametros_rem(char parametro[])
+{
+    REM tmp = nuevo_rem();
+    iniciar_buffer(parametro);
+
+    while (parametros[pos_contenedor] != '\0')
+    {
+        caracter = parametros[pos_contenedor];
+
+        if (caracter != '=')
+        {
+
+            if (caracter > 0 && caracter != ' ' && caracter != '-')
+            {
+                nombre_parametro[pos_parametro] = caracter;
+                pos_parametro++;
+            }
+        }
+        else
+        {
+            pos_contenedor++;
+            nombre_parametro[pos_parametro] = '\0';
+            mayusculas(nombre_parametro);
+
+            if (strcmp(nombre_parametro, "PATH") == 0)
+            {
+                get_path(tmp.path, &tmp.ban_path);
+            }
+            else
+            {
+                tmp.ban_error = 1;
+                parametro_error(nombre_parametro);
+                break;
+            }
+
+            limpiar_buffer(0);
+        }
+        pos_contenedor++;
+    }
+
+    return tmp;
+}
+
+EDIT analizar_parametros_edit(char parametro[])
+{
+    EDIT tmp = nuevo_edit();
+    iniciar_buffer(parametro);
+
+    while (parametros[pos_contenedor] != '\0')
+    {
+        caracter = parametros[pos_contenedor];
+
+        if (caracter != '=')
+        {
+
+            if (caracter > 0 && caracter != ' ' && caracter != '-')
+            {
+                nombre_parametro[pos_parametro] = caracter;
+                pos_parametro++;
+            }
+        }
+        else
+        {
+            pos_contenedor++;
+            nombre_parametro[pos_parametro] = '\0';
+            mayusculas(nombre_parametro);
+
+            if (strcmp(nombre_parametro, "PATH") == 0)
+            {
+                get_path(tmp.path, &tmp.ban_path);
+            }
+            else if (strcmp(nombre_parametro, "CONT") == 0)
+            {
+                get_path(tmp.cont, &tmp.ban_cont);
+            }
+            else
+            {
+                tmp.ban_error = 1;
+                parametro_error(nombre_parametro);
+                break;
+            }
+
+            limpiar_buffer(0);
+        }
+        pos_contenedor++;
+    }
+
+    return tmp;
+}
+
+REN analizar_parametros_ren(char parametro[])
+{
+    REN tmp = nuevo_ren();
+    iniciar_buffer(parametro);
+
+    while (parametros[pos_contenedor] != '\0')
+    {
+        caracter = parametros[pos_contenedor];
+
+        if (caracter != '=')
+        {
+
+            if (caracter > 0 && caracter != ' ' && caracter != '-')
+            {
+                nombre_parametro[pos_parametro] = caracter;
+                pos_parametro++;
+            }
+        }
+        else
+        {
+            pos_contenedor++;
+            nombre_parametro[pos_parametro] = '\0';
+            mayusculas(nombre_parametro);
+
+            if (strcmp(nombre_parametro, "PATH") == 0)
+            {
+                get_path(tmp.path, &tmp.ban_path);
+            }
+            else if (strcmp(nombre_parametro, "NAME") == 0)
+            {
+                get_name(tmp.name, &tmp.ban_name);
+            }
+            else
+            {
+                tmp.ban_error = 1;
+                parametro_error(nombre_parametro);
+                break;
+            }
+
+            limpiar_buffer(0);
+        }
+        pos_contenedor++;
+    }
+
+    return tmp;
+}
+
+MKDIR analizar_parametros_mkdir(char parametro[])
+{
+    MKDIR tmp = nuevo_mkdir();
+    iniciar_buffer(parametro);
+
+    while (parametros[pos_contenedor] != '\0')
+    {
+        caracter = parametros[pos_contenedor];
+        if (caracter != '=')
+        {
+
+            if (caracter > 0 && caracter != ' ' && caracter != '-' && caracter != '\n')
+            {
+                nombre_parametro[pos_parametro] = caracter;
+                pos_parametro++;
+            }
+            else if (caracter == ' ' || caracter == '\n')
+            {
+                nombre_parametro[pos_parametro] = '\0';
+                mayusculas(nombre_parametro);
+
+                if (strcmp(nombre_parametro, "P") == 0)
+                {
+                    tmp.ban_p = 1;
+                    limpiar_buffer(0);
+                }
+            }
+        }
+        else
+        {
+            pos_contenedor++;
+            nombre_parametro[pos_parametro] = '\0';
+            mayusculas(nombre_parametro);
+
+            if (strcmp(nombre_parametro, "PATH") == 0)
+            {
+                get_path(tmp.path, &tmp.ban_path);
+            }
+            else
+            {
+                tmp.ban_error = 1;
+                parametro_error(nombre_parametro);
+                break;
+            }
+
+            limpiar_buffer(0);
+        }
+        pos_contenedor++;
+    }
+
+    return tmp;
+}
+
+CP analizar_parametros_cp(char parametro[])
+{
+    CP tmp = nuevo_cp();
+    iniciar_buffer(parametro);
+
+    while (parametros[pos_contenedor] != '\0')
+    {
+        caracter = parametros[pos_contenedor];
+
+        if (caracter != '=')
+        {
+
+            if (caracter > 0 && caracter != ' ' && caracter != '-')
+            {
+                nombre_parametro[pos_parametro] = caracter;
+                pos_parametro++;
+            }
+        }
+        else
+        {
+            pos_contenedor++;
+            nombre_parametro[pos_parametro] = '\0';
+            mayusculas(nombre_parametro);
+
+            if (strcmp(nombre_parametro, "PATH") == 0)
+            {
+                get_path(tmp.path, &tmp.ban_path);
+            }
+            else if (strcmp(nombre_parametro, "DEST") == 0)
+            {
+                get_path(tmp.dest, &tmp.ban_dest);
+            }
+            else
+            {
+                tmp.ban_error = 1;
+                parametro_error(nombre_parametro);
+                break;
+            }
+
+            limpiar_buffer(0);
+        }
+        pos_contenedor++;
+    }
+
+    return tmp;
+}
+
+MV analizar_parametros_mv(char parametro[])
+{
+    MV tmp = nuevo_mv();
+    iniciar_buffer(parametro);
+
+    while (parametros[pos_contenedor] != '\0')
+    {
+        caracter = parametros[pos_contenedor];
+
+        if (caracter != '=')
+        {
+
+            if (caracter > 0 && caracter != ' ' && caracter != '-')
+            {
+                nombre_parametro[pos_parametro] = caracter;
+                pos_parametro++;
+            }
+        }
+        else
+        {
+            pos_contenedor++;
+            nombre_parametro[pos_parametro] = '\0';
+            mayusculas(nombre_parametro);
+
+            if (strcmp(nombre_parametro, "PATH") == 0)
+            {
+                get_path(tmp.path, &tmp.ban_path);
+            }
+            else if (strcmp(nombre_parametro, "DEST") == 0)
+            {
+                get_path(tmp.dest, &tmp.ban_dest);
+            }
+            else
+            {
+                tmp.ban_error = 1;
+                parametro_error(nombre_parametro);
+                break;
+            }
+
+            limpiar_buffer(0);
+        }
+        pos_contenedor++;
+    }
+
+    return tmp;
+}
+
+FIND analizar_parametros_find(char parametro[])
+{
+    FIND tmp = nuevo_find();
+    iniciar_buffer(parametro);
+
+    while (parametros[pos_contenedor] != '\0')
+    {
+        caracter = parametros[pos_contenedor];
+
+        if (caracter != '=')
+        {
+
+            if (caracter > 0 && caracter != ' ' && caracter != '-')
+            {
+                nombre_parametro[pos_parametro] = caracter;
+                pos_parametro++;
+            }
+        }
+        else
+        {
+            pos_contenedor++;
+            nombre_parametro[pos_parametro] = '\0';
+            mayusculas(nombre_parametro);
+
+            if (strcmp(nombre_parametro, "PATH") == 0)
+            {
+                get_path(tmp.path, &tmp.ban_path);
+            }
+            else if (strcmp(nombre_parametro, "NAME") == 0)
+            {
+                get_name(tmp.name, &tmp.ban_name);
+            }
+            else
+            {
+                tmp.ban_error = 1;
+                parametro_error(nombre_parametro);
+                break;
+            }
+
+            limpiar_buffer(0);
+        }
+        pos_contenedor++;
+    }
+
+    return tmp;
+}
+
+CHOWN analizar_parametros_chown(char parametro[])
+{
+    CHOWN tmp = nuevo_chown();
+    iniciar_buffer(parametro);
+
+    while (parametros[pos_contenedor] != '\0')
+    {
+        caracter = parametros[pos_contenedor];
+
+        if (caracter != '=')
+        {
+
+            if (caracter > 0 && caracter != ' ' && caracter != '-' && caracter != '\n')
+            {
+                nombre_parametro[pos_parametro] = caracter;
+                pos_parametro++;
+            }
+            else if (caracter == ' ' || caracter == '\n')
+            {
+                nombre_parametro[pos_parametro] = '\0';
+                mayusculas(nombre_parametro);
+
+                if (strcmp(nombre_parametro, "R") == 0)
+                {
+                    tmp.ban_r = 1;
+                    limpiar_buffer(0);
+                }
+            }
+        }
+        else
+        {
+            pos_contenedor++;
+            nombre_parametro[pos_parametro] = '\0';
+            mayusculas(nombre_parametro);
+
+            if (strcmp(nombre_parametro, "PATH") == 0)
+            {
+                get_path(tmp.path, &tmp.ban_path);
+            }
+            else if (strcmp(nombre_parametro, "USR") == 0)
+            {
+                get_usr(tmp.usr, &tmp.ban_usr);
+            }
+            else
+            {
+                tmp.ban_error = 1;
+                parametro_error(nombre_parametro);
+                break;
+            }
+
+            limpiar_buffer(0);
+        }
+        pos_contenedor++;
+    }
+
+    return tmp;
+}
+
+CHGRP analizar_parametros_chgrp(char parametro[])
+{
+    CHGRP tmp = nuevo_chgrp();
+    iniciar_buffer(parametro);
+
+    while (parametros[pos_contenedor] != '\0')
+    {
+        caracter = parametros[pos_contenedor];
+
+        if (caracter != '=')
+        {
+
+            if (caracter > 0 && caracter != ' ' && caracter != '-' && caracter != '\n')
+            {
+                nombre_parametro[pos_parametro] = caracter;
+                pos_parametro++;
+            }
+        }
+        else
+        {
+            pos_contenedor++;
+            nombre_parametro[pos_parametro] = '\0';
+            mayusculas(nombre_parametro);
+
+            if (strcmp(nombre_parametro, "USR") == 0)
+            {
+                get_usr(tmp.usr, &tmp.ban_usr);
+            }
+            else if (strcmp(nombre_parametro, "GRP") == 0)
+            {
+                get_grp(tmp.grp, &tmp.ban_grp);
+            }
+            else
+            {
+                tmp.ban_error = 1;
+                parametro_error(nombre_parametro);
+                break;
+            }
+
+            limpiar_buffer(0);
+        }
+        pos_contenedor++;
+    }
+
+    return tmp;
+}
+
+RECOVERY analizar_parametros_recovery(char parametro[])
+{
+    RECOVERY tmp = nuevo_recovery();
+    iniciar_buffer(parametro);
+
+    while (parametros[pos_contenedor] != '\0')
+    {
+        caracter = parametros[pos_contenedor];
+
+        if (caracter != '=')
+        {
+
+            if (caracter > 0 && caracter != ' ' && caracter != '-')
+            {
+                nombre_parametro[pos_parametro] = caracter;
+                pos_parametro++;
+            }
+        }
+        else
+        {
+            pos_contenedor++;
+            nombre_parametro[pos_parametro] = '\0';
+            mayusculas(nombre_parametro);
+
+            if (strcmp(nombre_parametro, "ID") == 0)
+            {
+                get_id(tmp.id, &tmp.ban_id);
+            }
+            else
+            {
+                tmp.ban_error = 1;
+                parametro_error(nombre_parametro);
+                break;
+            }
+
+            limpiar_buffer(0);
+        }
+        pos_contenedor++;
+    }
+
+    return tmp;
+}
+
+LOSS analizar_parametros_loss(char parametro[])
+{
+    LOSS tmp = nuevo_loss();
+    iniciar_buffer(parametro);
+
+    while (parametros[pos_contenedor] != '\0')
+    {
+        caracter = parametros[pos_contenedor];
+
+        if (caracter != '=')
+        {
+
+            if (caracter > 0 && caracter != ' ' && caracter != '-')
+            {
+                nombre_parametro[pos_parametro] = caracter;
+                pos_parametro++;
+            }
+        }
+        else
+        {
+            pos_contenedor++;
+            nombre_parametro[pos_parametro] = '\0';
+            mayusculas(nombre_parametro);
+
+            if (strcmp(nombre_parametro, "ID") == 0)
+            {
+                get_id(tmp.id, &tmp.ban_id);
+            }
+            else
+            {
+                tmp.ban_error = 1;
+                parametro_error(nombre_parametro);
+                break;
+            }
+
+            limpiar_buffer(0);
+        }
+        pos_contenedor++;
+    }
+
+    return tmp;
 }
