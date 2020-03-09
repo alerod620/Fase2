@@ -108,85 +108,89 @@ void ejecutar_comando(char comando[],char parametros[]){
     }
     else if(strcmp(comando, "MKFS") == 0) //Comandos de la fase 2
     {
-
+		mkfs(parametros);
     }
     else if(strcmp(comando, "LOGIN") == 0)
     {
-
+		login(parametros);
     }
     else if(strcmp(comando, "LOGOUT") == 0)
     {
-
+		logout(parametros);
     }
     else if(strcmp(comando, "MKGRP") == 0)
     {
-
+		mkgrp(parametros);
     }
     else if(strcmp(comando, "RMGRP") == 0)
     {
-
+		rmgrp(parametros);
     }
     else if(strcmp(comando, "MKUSR") == 0)
     {
-
+		mkusr(parametros);
     }
     else if(strcmp(comando, "RMUSR") == 0)
     {
-
+		rmusr(parametros);
     }
     else if(strcmp(comando, "CHMOD") == 0)
     {
-
+		chmod(parametros);
     }
     else if(strcmp(comando, "MKFILE") == 0)
     {
-
+		mkfile(parametros);
     }
     else if(strcmp(comando, "CAT") == 0)
     {
-
+		cat(parametros);
     }
     else if(strcmp(comando, "REM") == 0)
     {
-
+		rem(parametros);
     }
     else if(strcmp(comando, "EDIT") == 0)
     {
-
+		edit(parametros);
     }
     else if(strcmp(comando, "REN") == 0)
     {
-
+		ren(parametros);
     }
     else if(strcmp(comando, "MKDIR") == 0)
     {
-
+		mkdir(parametros);
     }
     else if(strcmp(comando, "CP") == 0)
     {
-
+		cp(parametros);
     }
     else if(strcmp(comando, "MV") == 0)
     {
-
+		mv(parametros);
     }
     else if(strcmp(comando, "FIND") == 0)
     {
-
+		find(parametros);
     }
     else if(strcmp(comando, "CHOWN") == 0)
     {
-
+		chown(parametros);
     }
     else if(strcmp(comando, "CHGRP") == 0)
     {
-
+		chgrp(parametros);
     }
     else if(strcmp(comando, "RECOVERY") == 0)
     {
-
+		recovery(parametros);
     }
     else if(strcmp(comando, "LOSS") == 0)
+    {
+		loss(parametros);
+    }
+	else if(strcmp(comando, "PAUSE") == 0)
     {
 
     }
