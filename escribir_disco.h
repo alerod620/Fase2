@@ -1,17 +1,8 @@
 #ifndef ESCRIBIR_DISCO_H
 #define ESCRIBIR_DISCO_H
 
-#include <stdio.h>
 #include <estructuras_disco.h>
 #include <estructuras.h>
-
-FILE* ARCHIVO_DISCO;
-SUPER_BLOQUE SUPER_BLOQUE_PARTICION;
-PARTICION PARTICION_USO;
-INODO TMP_INODO;
-BLOQUE_CARPETA TMP_CARPETA;
-BLOQUE_ARCHIVO TMP_ARCHIVO;
-BLOQUE_APUNTADOR TMP_APUNTADOR;
 
 void buscar_inodo_carpeta(int numero_ino, char name[]);
 void limpiar_variables_buscar_inodo();

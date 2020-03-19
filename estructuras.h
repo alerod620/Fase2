@@ -97,6 +97,7 @@ typedef struct rep
     char path[255];
     char name[255];
     char id[255];
+    char ruta[255];
     int ban_name;
     int ban_path;
     int ban_id;

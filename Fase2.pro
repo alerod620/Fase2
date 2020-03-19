@@ -18,13 +18,13 @@ SOURCES += main.cpp \
     analizar_comando.cpp \
     comando.cpp \
     ejecutar_comando.cpp \
+    escribir_disco.cpp \
     estructuras_disco.cpp \
     estructuras.cpp \
     leer_entrada.cpp \
     main.cpp \
     reporte.cpp \
-    validar_comando.cpp \
-    escribir_disco.cpp
+    validar_comando.cpp
 
 SUBDIRS += \
     Fase2.pro
@@ -36,9 +36,9 @@ HEADERS += \
     analizar_comando.h \
     comando.h \
     ejecutar_comando.h \
+    escribir_disco.h \
     estructuras_disco.h \
     estructuras.h \
     leer_entrada.h \
     reporte.h \
-    validar_comando.h \
-    escribir_disco.h
+    validar_comando.h

@@ -7,6 +7,8 @@
 #include <ejecutar_comando.h>
 #include <validar_comando.h>
 
+FILE* REPORTE_TREE;
+
 char dot[2014];
 char formato[10];
 

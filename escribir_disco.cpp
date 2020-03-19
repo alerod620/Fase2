@@ -1,3 +1,6 @@
+#include <string.h>
+#include <stdio.h>
+
 #include <escribir_disco.h>
 #include <validar_comando.h>
 
@@ -12,6 +15,14 @@ Los valores de la variable existe nodo sirve para:
 **** 4 -> Existe archivo
 
 */
+
+FILE* ARCHIVO_DISCO;
+SUPER_BLOQUE SUPER_BLOQUE_PARTICION;
+PARTICION PARTICION_USO;
+INODO TMP_INODO;
+BLOQUE_CARPETA TMP_CARPETA;
+BLOQUE_ARCHIVO TMP_ARCHIVO;
+BLOQUE_APUNTADOR TMP_APUNTADOR;
 
 char contenido[10000];
 int tam_contenido;
@@ -106,7 +117,7 @@ void buscar_inodo_carpeta(int numero_inodo, char *name)
                         //Compara si la ruta es la misma
                         if (strcmp(name, TMP_CARPETA.b_content[j].b_name) == 0)
                         {
-                            get_name_inodo();
+                            nombre_inodo();
                             buscar_inodo_carpeta(TMP_CARPETA.b_content[j].b_inodo, tmp_path_inodo);
                             if (existe_inodo == 1)
                                 return;
@@ -162,7 +173,7 @@ void inicializar_variables_escribir(MOUNT* particion, char* path_cont, char *con
             fseek(ARCHIVO_DISCO, PARTICION_USO.start, SEEK_SET);
             fread(&SUPER_BLOQUE_PARTICION, sizeof (SUPER_BLOQUE), 1, ARCHIVO_DISCO);
 
-            strcpy(&path_contenido, path_cont);
+            strcpy(path_contenido, path_cont);
 
             for (int i = 0; i < 10000; i++)
             {
@@ -198,7 +209,7 @@ void inicializar_variables_leer(MOUNT* particion, char* path_cont)
             fseek(ARCHIVO_DISCO, PARTICION_USO.start, SEEK_SET);
             fread(&SUPER_BLOQUE_PARTICION, sizeof (SUPER_BLOQUE), 1, ARCHIVO_DISCO);
 
-            strcpy(&path_contenido, path_cont);
+            strcpy(path_contenido, path_cont);
         }
     }
 }
@@ -268,7 +279,7 @@ void limpiar_variable_file_name()
 
 void actualizar_super_bloque()
 {
-    fseek(ARCHIVO_DISCO, PARTICION_USO.part_start, SEEK_SET);
+    fseek(ARCHIVO_DISCO, PARTICION_USO.start, SEEK_SET);
     fwrite(&SUPER_BLOQUE_PARTICION, sizeof (SUPER_BLOQUE_PARTICION), 1, ARCHIVO_DISCO);
 }
 
@@ -467,7 +478,7 @@ void escribir_bloque_apuntador_carpeta(int numero_apuntador_de_inodo, int inodo_
     escribir_bloque_carpeta(inodo_padre, inodo_actual, 12);
 
     TMP_CARPETA.b_content[2].b_inodo = SUPER_BLOQUE_PARTICION.s_first_ino;
-    strcpy(TMP_CARPETA.b_content[2].b_name, FILE_NAME);\
+    strcpy(TMP_CARPETA.b_content[2].b_name, file_name);\
     actualizar_bloque_carpeta(TMP_APUNTADOR.b_pointers[0]);
 
     actualizar_super_bloque();
@@ -492,7 +503,7 @@ void escribir_inodo_archivo(MOUNT* particion, char* path_cont, char* cont, int i
 
     if (ARCHIVO_DISCO != NULL) {
         existe_inodo = 0;
-        get_name_inodo();
+        nombre_inodo();
         buscar_inodo_carpeta(0, tmp_path_inodo);
         actualizar_inodo_bloque_carpeta();
 
@@ -507,7 +518,7 @@ void escribir_inodo_archivo(MOUNT* particion, char* path_cont, char* cont, int i
         TMP_INODO.i_atime = obtener();
 
         int numero_block_ocupar = (tam_contenido) / 64;
-        INDICE_CONTENIDO = 0;
+        indice_contenido = 0;
 
         if (numero_block_ocupar < 12) {
             for (int i = 0; i <= numero_block_ocupar; i++) {
@@ -553,8 +564,8 @@ void escribir_inodo_archivo(MOUNT* particion, char* path_cont, char* cont, int i
                     TMP_INODO.i_block[13] = SUPER_BLOQUE_PARTICION.s_first_blo;
 
                     TMP_APUNTADOR = new_bloque_apuntador();
-                    CARACTER_FILE = '1';
-                    actualizar_bm_bloques(CARACTER_FILE, SUPER_BLOQUE_PARTICION.s_first_blo);
+                    caracter_archivo = '1';
+                    actualizar_bm_bloques(caracter_archivo, SUPER_BLOQUE_PARTICION.s_first_blo);
                     actualizar_bloque_apuntador(TMP_INODO.i_block[12]);
                     SUPER_BLOQUE_PARTICION.s_first_blo++;
                     SUPER_BLOQUE_PARTICION.s_free_blocks_count--;
@@ -570,8 +581,8 @@ void escribir_inodo_archivo(MOUNT* particion, char* path_cont, char* cont, int i
                                 actualizar_bloque_apuntador(TMP_INODO.i_block[13]);
 
                                 TMP_APUNTADOR = new_bloque_apuntador();
-                                CARACTER_FILE = '1';
-                                actualizar_bm_bloques(CARACTER_FILE, SUPER_BLOQUE_PARTICION.s_first_blo);
+                                caracter_archivo = '1';
+                                actualizar_bm_bloques(caracter_archivo, SUPER_BLOQUE_PARTICION.s_first_blo);
                                 actualizar_bloque_apuntador(tmp_apuntador.b_pointers[i]);
                                 SUPER_BLOQUE_PARTICION.s_first_blo++;
                                 SUPER_BLOQUE_PARTICION.s_free_blocks_count--;
@@ -599,8 +610,8 @@ void escribir_inodo_archivo(MOUNT* particion, char* path_cont, char* cont, int i
         }
 
 
-        CARACTER_FILE = '1';
-        actualizar_bm_inodos(CARACTER_FILE, SUPER_BLOQUE_PARTICION.s_first_ino);
+        caracter_archivo = '1';
+        actualizar_bm_inodos(caracter_archivo, SUPER_BLOQUE_PARTICION.s_first_ino);
         actualizar_inodos(SUPER_BLOQUE_PARTICION.s_first_ino);
 
         SUPER_BLOQUE_PARTICION.s_first_ino++;

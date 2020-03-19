@@ -1223,7 +1223,7 @@ void cat(char parametro[])
 
         if (tmp.ban_file == 0)
         {
-            mensaje("ERROR FALTA EL PARAMETRO FILE-N");
+            mensaje("ERROR FALTA EL PARAMETRO FILE");
         }
         else
         {
@@ -1373,7 +1373,7 @@ void chown(char parametro[])
 
         if(tmp.ban_path == 1 && tmp.ban_usr == 1)
         {
-            print_chown(&tmp);
+            //print_chown(&tmp);
         }
         else
         {
@@ -1448,7 +1448,7 @@ MKFS parametros_mkfs(char parametro[])
 
     while (parametros[pos_contenedor] != '\0')
     {
-        caracter = [pos_contenedor];
+        caracter = parametros[pos_contenedor];
 
         if(caracter != '=')
         {

@@ -1,6 +1,8 @@
 #ifndef REPORTE_H
 #define REPORTE_H
 
+#include <escribir_disco.h>
+
 void reporte_disco(char* path_disco,char* path_destino_imagen);
 void reporte_mbr(char* path_disco,char* path_destino_imagen);
 
@@ -17,7 +19,7 @@ void limpiar();
 ******************************************************************************
 */
 
-FILE* REPORTE_TREE;
+
 
 void reporte_bm_inodos(char* path_disco, int bm_start, int bm_count, char* path_destino_reporte);
 void reporte_bm_bloques(char* path_disco, int bm_start, int bm_count, char* path_destino_reporte);

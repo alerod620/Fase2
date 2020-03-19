@@ -1076,6 +1076,33 @@ void log_unmount(MOUNT *tmp_mount) {
     }
 }
 
+MOUNT particion_montada(char id[], PARTICIONES_MONTADAS lista[]) {
+    MOUNT tmp = nuevo_mount();
+
+    for (int i = 0; i < 26; i++)
+    {
+
+        if (lista[i].letra == id[2])
+        {
+
+            for (int j = 0; j < 25; j++)
+            {
+
+                if (strcmp(lista[i].PART_MONTADA[j].id, id) == 0)
+                {
+                    tmp.ban_name = 1;
+                    tmp.ban_path = 1;
+                    strcpy(tmp.path, lista[i].path);
+                    strcpy(tmp.name, lista[i].PART_MONTADA[j].nombre);
+                    return tmp;
+                }
+            }
+        }
+    }
+    tmp.ban_error = 1;
+    return tmp;
+}
+
 PARTICION buscar_particion_montada(MOUNT *tmp) {
     FILE *ARCHIVO;
     PARTICION tmp_particion;
@@ -1206,7 +1233,7 @@ LOGIN obtener_usuario(char contenido[], int *posicion)
     if (contenido[puntero_contenido] == '\0')
     {
         tmp.ban_error = 1;
-        return;
+        return tmp;
     }
     else
     {
@@ -1452,7 +1479,7 @@ void obtener_usuario_login(LOGIN* tmp_usuario, char contenido[], LOGIN* tmp)
                         if (strcmp(tmp_usuario->pwd, tmp->pwd) == 0)
                         {
                             obtener_grupo_usuario(contenido, tmp->id, &tmp->ban_id);
-                            return tmp;
+                            return;
                         }
                         else
                         {

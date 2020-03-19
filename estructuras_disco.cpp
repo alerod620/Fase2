@@ -216,6 +216,25 @@ SUPER_BLOQUE new_super_bloque()
     return tmp;
 }
 
+JOURNALING new_journaling() {
+    JOURNALING tmp;
+    tmp.j_tipo_operacion = 0;
+    tmp.j_tipo = 0;
+    tmp.j_permisos = 0;
+    tmp.j_fecha = NULL;
+
+    for (int i = 0; i < 100; i++)
+    {
+        if (i < 12)
+        {
+            tmp.j_propietario[i] = '\0';
+        }
+        tmp.j_contenido[i] = '\0';
+        tmp.j_nombre[i] = '\0';
+    }
+    return tmp;
+}
+
 INODO new_inodo()
 {
     INODO tmp;
@@ -286,7 +305,7 @@ BLOQUE_APUNTADOR new_bloque_apuntador()
 USUARIO_SISTEMA new_usuario_sistema()
 {
     USUARIO_SISTEMA tmp;
-    tmp.flag_usuario = 0;
+    tmp.ban_usuario = 0;
     tmp.numero_usuario = 0;
     tmp.numero_grupo = 0;
 

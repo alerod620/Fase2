@@ -96,6 +96,16 @@ typedef struct super_bloque
     int s_block_start;
 } SUPER_BLOQUE;
 
+typedef struct journaling {
+    int j_tipo_operacion;
+    int j_tipo;
+    int j_permisos;
+    char j_nombre[100];
+    char j_contenido[100];
+    time_t j_fecha;
+    char j_propietario[12];
+} JOURNALING;
+
 typedef struct inodo
 {
     int i_uid;
@@ -127,6 +137,7 @@ typedef struct bloque_apuntador {
 } BLOQUE_APUNTADOR;
 
 SUPER_BLOQUE new_super_bloque();
+JOURNALING new_journaling();
 INODO new_inodo();
 CONTENT new_content();
 BLOQUE_CARPETA new_bloque_carpeta();

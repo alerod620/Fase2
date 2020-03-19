@@ -645,7 +645,7 @@ void ejecutar_mount(MOUNT* tmp)
     FILE *archivo;
     MBR tmp_mbr;
 
-    if (part(tmp) == 1)
+    if (existe_part(tmp) == 1)
     {
         archivo = fopen(tmp->path, "rb");
 
@@ -1108,7 +1108,7 @@ void ejecutar_login(LOGIN* tmp)
         else
         {
             archivo = buscar_archivo_disco(&tmp_mount, "/users.txt");
-            if (archivo.archivo == 1)
+            if (archivo.existe_archivo == 1)
             {
                 LOGIN tmp_sistema = nuevo_login();
                 int posicion = 0;
@@ -1262,7 +1262,7 @@ void ejecutar_mkfile(MKFILE* tmp)
 }
 
 void ejecutar_cat(CAT* tmp) {
-
+    
 }
 
 void ejecutar_rem(REM* tmp) {
@@ -1446,7 +1446,7 @@ void ejecutar_rep_file(REP* tmp)
     {
         archivo = buscar_archivo_disco(&tmp_mount, tmp->ruta);
 
-        if (archivo.archivo == 1)
+        if (archivo.existe_archivo == 1)
         {
             reporte_file(tmp->path, archivo);
         }
