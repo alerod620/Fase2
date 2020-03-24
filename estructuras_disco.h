@@ -2,6 +2,8 @@
 #define ESTRUCTURAS_DISCO_H
 
 #include <time.h>
+#include <string.h>
+
 #include <estructuras.h>
 
 #define tam_buffer 1024

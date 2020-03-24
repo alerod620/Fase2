@@ -88,11 +88,13 @@ REP nuevo_rep()
     nuevo.ban_name = 0;
     nuevo.ban_path = 0;
     nuevo.ban_error = 0;
+    nuevo.ban_ruta = 0;
     for(int i = 0; i < 255; i++)
     {
         nuevo.id[i] = '\0';
         nuevo.name[i] = '\0';
         nuevo.path[i] = '\0';
+        nuevo.ruta[i] = '\0';
     }
     return nuevo;
 }

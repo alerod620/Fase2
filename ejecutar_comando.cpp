@@ -11,6 +11,7 @@
 #include <leer_entrada.h>
 #include <comando.h>
 #include <validar_comando.h>
+#include <analizar_parametro.h>
 #include <reporte.h>
 #include <escribir_disco.h>
 
@@ -1078,7 +1079,7 @@ void ejecutar_mkfs(MKFS *tmp)
                         fclose(ARCHIVO);
 
                         escribir_inodo_carpeta(&tmp_mount, "/", 1, 1, '0', 664);
-                        escribir_inodo_archivo(&tmp_mount, "/users.txt", "1, G, root  \n1, U, root  , root  , 123  \n2, G, usuario   \n2, U, usuario, chicas, chicas123\n", 1, 1, '1', 664);
+                        escribir_inodo_archivo(&tmp_mount, "/users.txt", "1, G, root  \n1, U, root  , root  , 123  \n2, G, usuario   \n2, U, usuario, ale, ale123\n", 1, 1, '1', 664);
                         fprintf(stderr, "FORMATEO EXITOSO\n");
                         return;
                     }
@@ -1263,6 +1264,50 @@ void ejecutar_mkfile(MKFILE* tmp)
 
 void ejecutar_cat(CAT* tmp) {
     
+    FILE* archivo;
+    char buf[1000];
+    int pos = 1;
+    int caracter_entrada = 0;
+
+    for(int i = 0; i <1000; i++)
+    {
+        buf[i] = '\0';
+    }
+
+    archivo = fopen(tmp->path, "r");
+    buf[0] = '#';
+
+    if (archivo == NULL)
+    {
+        printf("%s\n", "*** ERROR AL ABRIR ARCHIVO ***");
+    }
+    else
+    {
+        while (caracter_entrada != EOF)
+        {
+            caracter_entrada = fgetc(archivo);
+
+            if (caracter_entrada == '\n')
+            {
+
+                buf[pos] = '\n';
+                pos++;
+                buf[pos] = '#';
+                pos++;
+            }
+            else if (caracter_entrada == '\r')
+            {
+
+            }
+            else
+            {
+                buf[pos] = caracter_entrada;
+                pos++;
+            }
+        }
+        fprintf(stderr,buf);
+        fclose(archivo);
+    }
 }
 
 void ejecutar_rem(REM* tmp) {

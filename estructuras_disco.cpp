@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include <estructuras_disco.h>
 
 time_t obtener()
@@ -12,7 +13,8 @@ time_t obtener()
 char* formato_fecha(time_t t)
 {
     char* f_h = (char*) malloc(sizeof (char)*128);
-    struct tm *tiempo_local = localtime(&t);
+    struct tm *tiempo_local;
+    tiempo_local = localtime(&t);
     strftime(f_h, 128, "%d/%m/%y %H:%M", tiempo_local);
     return f_h;
 }

@@ -8,6 +8,8 @@
 #include <libgen.h>
 
 #include <validar_comando.h>
+#include <analizar_comando.h>
+#include <analizar_parametro.h>
 
 void mensaje(char* mensaje)
 {

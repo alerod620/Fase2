@@ -102,6 +102,7 @@ typedef struct rep
     int ban_path;
     int ban_id;
     int ban_error;
+    int ban_ruta;
 } REP;
 
 typedef struct exec

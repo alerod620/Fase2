@@ -1,8 +1,8 @@
 #include <string.h>
-#include <stdio.h>
 
 #include <escribir_disco.h>
 #include <validar_comando.h>
+#include <analizar_parametro.h>
 
 /*
 

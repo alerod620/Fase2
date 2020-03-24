@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
 
 #include <analizar_comando.h>
 #include <comando.h>
+#include <analizar_parametro.h>
 
 int c;
 int tam_contenedor;
@@ -108,15 +108,15 @@ void ejecutar_comando(char comando[],char parametros[]){
     }
     else if(strcmp(comando, "MKFS") == 0) //Comandos de la fase 2
     {
-
+        mkfs(parametros);
     }
     else if(strcmp(comando, "LOGIN") == 0)
     {
-
+        login(parametros);
     }
     else if(strcmp(comando, "LOGOUT") == 0)
     {
-
+        logout(parametros);
     }
     else if(strcmp(comando, "MKGRP") == 0)
     {
@@ -144,7 +144,7 @@ void ejecutar_comando(char comando[],char parametros[]){
     }
     else if(strcmp(comando, "CAT") == 0)
     {
-
+        cat(parametros);
     }
     else if(strcmp(comando, "REM") == 0)
     {
@@ -189,6 +189,17 @@ void ejecutar_comando(char comando[],char parametros[]){
     else if(strcmp(comando, "LOSS") == 0)
     {
 
+    }
+    else if(strcmp(comando, "PAUSE") == 0)
+    {
+        int entrada = 0;
+        printf("%s\n", "*** PRESIONE ENTER TECLA PARA CONTINUAR ***");
+
+        entrada = getchar();
+        if(entrada == 0)
+        {
+            printf("%s\n", "*** PRESIONE ENTER TECLA PARA CONTINUAR ***");
+        }
     }
     else
     {

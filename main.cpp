@@ -4,10 +4,10 @@
 
 #include <leer_entrada.h>
 
-char* terminal;
 
 int main()
 {
+    char* terminal;
     while (1) {
         fprintf(stderr,"****Ingrese comando****\n");
 

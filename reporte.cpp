@@ -3,7 +3,6 @@
 #include <string.h>
 
 #include <reporte.h>
-#include <estructuras_disco.h>
 #include <ejecutar_comando.h>
 #include <validar_comando.h>
 

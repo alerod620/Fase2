@@ -1,6 +1,6 @@
 #ifndef ESCRIBIR_DISCO_H
 #define ESCRIBIR_DISCO_H
-
+#include <stdio.h>
 #include <estructuras_disco.h>
 #include <estructuras.h>
 
