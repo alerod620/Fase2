@@ -219,22 +219,34 @@ void crear_primaria(FDISK* tmp)
                         if(validar_p1(&tmp_mbr, tam_part, &pos_inicio) == 1)
                         {
                             escribir_particion_mbr(&tmp_mbr, tmp, i, pos_inicio, tam_part);
+                            SUPER_BLOQUE tmp_sb = new_super_bloque();
+                            fseek(archivo, (pos_inicio - 1), SEEK_SET);
+                            fwrite(&tmp_sb, sizeof (SUPER_BLOQUE), 1, archivo);
                         }
                         break;
 
                     case 1:
                         if (validar_p2(&tmp_mbr, tam_part, &pos_inicio) == 1) {
                             escribir_particion_mbr(&tmp_mbr, tmp, i, pos_inicio, tam_part);
+                            SUPER_BLOQUE tmp_sb = new_super_bloque();
+                            fseek(archivo, (pos_inicio - 1), SEEK_SET);
+                            fwrite(&tmp_sb, sizeof (SUPER_BLOQUE), 1, archivo);
                         }
                         break;
                     case 2:
                         if (validar_p3(&tmp_mbr, tam_part, &pos_inicio) == 1) {
                             escribir_particion_mbr(&tmp_mbr, tmp, i, pos_inicio, tam_part);
+                            SUPER_BLOQUE tmp_sb = new_super_bloque();
+                            fseek(archivo, (pos_inicio - 1), SEEK_SET);
+                            fwrite(&tmp_sb, sizeof (SUPER_BLOQUE), 1, archivo);
                         }
                         break;
                     case 3:
                         if (validar_p4(&tmp_mbr, tam_part, &pos_inicio) == 1) {
                             escribir_particion_mbr(&tmp_mbr, tmp, i, pos_inicio, tam_part);
+                            SUPER_BLOQUE tmp_sb = new_super_bloque();
+                            fseek(archivo, (pos_inicio - 1), SEEK_SET);
+                            fwrite(&tmp_sb, sizeof (SUPER_BLOQUE), 1, archivo);
                         }
                         break;
                     }
@@ -297,6 +309,7 @@ void crear_extendida(FDISK* tmp)
                     case 0:
                         if (validar_p1(&tmp_mbr, tam_part, &pos_inicio) == 1) {
                             escribir_particion_mbr(&tmp_mbr, tmp, i, pos_inicio, tam_part);
+                            pos_inicio--;
                             EBR nuevo = new_ebr('0', 0, pos_inicio, 0);
                             fseek(archivo, pos_inicio, SEEK_SET);
                             fwrite(&nuevo, sizeof (EBR), 1, archivo);
@@ -305,6 +318,7 @@ void crear_extendida(FDISK* tmp)
                     case 1:
                         if (validar_p2(&tmp_mbr, tam_part, &pos_inicio) == 1) {
                             escribir_particion_mbr(&tmp_mbr, tmp, i, pos_inicio, tam_part);
+                            pos_inicio--;
                             EBR nuevo = new_ebr('0', 0, pos_inicio, 0);
                             fseek(archivo, pos_inicio, SEEK_SET);
                             fwrite(&nuevo, sizeof (EBR), 1, archivo);
@@ -313,6 +327,7 @@ void crear_extendida(FDISK* tmp)
                     case 2:
                         if (validar_p3(&tmp_mbr, tam_part, &pos_inicio) == 1) {
                             escribir_particion_mbr(&tmp_mbr, tmp, i, pos_inicio, tam_part);
+                            pos_inicio--;
                             EBR nuevo = new_ebr('0', 0, pos_inicio, 0);
                             fseek(archivo, pos_inicio, SEEK_SET);
                             fwrite(&nuevo, sizeof (EBR), 1, archivo);
@@ -321,6 +336,7 @@ void crear_extendida(FDISK* tmp)
                     case 3:
                         if (validar_p4(&tmp_mbr, tam_part, &pos_inicio) == 1) {
                             escribir_particion_mbr(&tmp_mbr, tmp, i, pos_inicio, tam_part);
+                            pos_inicio--;
                             EBR nuevo = new_ebr('0', 0, pos_inicio, 0);
                             fseek(archivo, pos_inicio, SEEK_SET);
                             fwrite(&nuevo, sizeof (EBR), 1, archivo);
@@ -381,9 +397,14 @@ void crear_logica(FDISK* tmp)
                         {
                             if (tmp_ebr.next == -1) //Esta vacia la particion extendida
                             {
-                                fseek(archivo, pos_inicio, SEEK_SET);
                                 escribir_particion_ebr(&tmp_ebr, tmp, pos_inicio, tam_part, -1);
+                                fseek(archivo, pos_inicio, SEEK_SET);
                                 fwrite(&tmp_ebr, sizeof (EBR), 1, archivo);
+
+                                pos_inicio += sizeof (EBR);
+                                SUPER_BLOQUE tmp_sb = new_super_bloque();
+                                fseek(archivo, pos_inicio, SEEK_SET);
+                                fwrite(&tmp_sb, sizeof (SUPER_BLOQUE), 1, archivo);
                                 break;
                             }
                             else //El primer EBR esta vacio
@@ -400,6 +421,11 @@ void crear_logica(FDISK* tmp)
                                     escribir_particion_ebr(&tmp_ebr, tmp, pos_inicio, tam_part, puntero_next);
                                     fseek(archivo, pos_inicio, SEEK_SET);
                                     fwrite(&tmp_ebr, sizeof (EBR), 1, archivo);
+
+                                    pos_inicio += sizeof (EBR);
+                                    SUPER_BLOQUE tmp_sb = new_super_bloque();
+                                    fseek(archivo, pos_inicio, SEEK_SET);
+                                    fwrite(&tmp_sb, sizeof (SUPER_BLOQUE), 1, archivo);
                                     break;
                                 }
                             }
@@ -420,6 +446,11 @@ void crear_logica(FDISK* tmp)
                                     escribir_particion_ebr(&tmp_ebr, tmp, pos_inicio, tam_part, -1);
                                     fseek(archivo, pos_inicio, SEEK_SET);
                                     fwrite(&tmp_ebr, sizeof (EBR), 1, archivo);
+
+                                    pos_inicio += sizeof (EBR);
+                                    SUPER_BLOQUE tmp_sb = new_super_bloque();
+                                    fseek(archivo, pos_inicio, SEEK_SET);
+                                    fwrite(&tmp_sb, sizeof (SUPER_BLOQUE), 1, archivo);
                                     break;
                                 }
                                 else
@@ -441,6 +472,11 @@ void crear_logica(FDISK* tmp)
                                     escribir_particion_ebr(&tmp_ebr, tmp, pos_inicio, tam_part, puntero_next);
                                     fseek(archivo, pos_inicio, SEEK_SET);
                                     fwrite(&tmp_ebr, sizeof (EBR), 1, archivo);
+
+                                    pos_inicio += sizeof (EBR);
+                                    SUPER_BLOQUE tmp_sb = new_super_bloque();
+                                    fseek(archivo, pos_inicio, SEEK_SET);
+                                    fwrite(&tmp_sb, sizeof (SUPER_BLOQUE), 1, archivo);
                                     break;
                                 }
                                 else
@@ -466,6 +502,11 @@ void crear_logica(FDISK* tmp)
                                 escribir_particion_ebr(&tmp_ebr, tmp, pos_inicio, tam_part, -1);
                                 fseek(archivo, pos_inicio, SEEK_SET);
                                 fwrite(&tmp_ebr, sizeof (EBR), 1, archivo);
+
+                                pos_inicio += sizeof (EBR);
+                                SUPER_BLOQUE tmp_sb = new_super_bloque();
+                                fseek(archivo, pos_inicio, SEEK_SET);
+                                fwrite(&tmp_sb, sizeof (SUPER_BLOQUE), 1, archivo);
                                 break;
                             }
                             else
@@ -487,6 +528,11 @@ void crear_logica(FDISK* tmp)
                                 escribir_particion_ebr(&tmp_ebr, tmp, pos_inicio, tam_part, puntero_next);
                                 fseek(archivo, pos_inicio, SEEK_SET);
                                 fwrite(&tmp_ebr, sizeof (EBR), 1, archivo);
+
+                                pos_inicio += sizeof (EBR);
+                                SUPER_BLOQUE tmp_sb = new_super_bloque();
+                                fseek(archivo, pos_inicio, SEEK_SET);
+                                fwrite(&tmp_sb, sizeof (SUPER_BLOQUE), 1, archivo);
                                 break;
                             }
                             else

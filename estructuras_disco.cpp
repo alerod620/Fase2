@@ -12,7 +12,8 @@ time_t obtener()
 
 char* formato_fecha(time_t t)
 {
-    char* f_h = (char*) malloc(sizeof (char)*128);
+    //char *f_h = (char*) malloc(sizeof (char)*128);
+    char f_h[128];
     struct tm *tiempo_local;
     tiempo_local = localtime(&t);
     strftime(f_h, 128, "%d/%m/%y %H:%M", tiempo_local);
