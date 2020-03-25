@@ -140,7 +140,7 @@ void ejecutar_comando(char comando[],char parametros[]){
     }
     else if(strcmp(comando, "MKFILE") == 0)
     {
-
+        mkfile(parametros);
     }
     else if(strcmp(comando, "CAT") == 0)
     {
@@ -160,7 +160,7 @@ void ejecutar_comando(char comando[],char parametros[]){
     }
     else if(strcmp(comando, "MKDIR") == 0)
     {
-
+        mkdir(parametros);
     }
     else if(strcmp(comando, "CP") == 0)
     {
@@ -193,12 +193,12 @@ void ejecutar_comando(char comando[],char parametros[]){
     else if(strcmp(comando, "PAUSE") == 0)
     {
         int entrada = 0;
-        printf("%s\n", "*** PRESIONE ENTER TECLA PARA CONTINUAR ***");
+        printf("%s\n", "*** PRESIONE ENTER PARA CONTINUAR ***");
 
         entrada = getchar();
         if(entrada == 0)
         {
-            printf("%s\n", "*** PRESIONE ENTER TECLA PARA CONTINUAR ***");
+            printf("%s\n", "*** PRESIONE ENTER PARA CONTINUAR ***");
         }
     }
     else
