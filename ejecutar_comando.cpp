@@ -1220,7 +1220,7 @@ void ejecutar_mkfile(MKFILE* tmp)
 {
     if (LOGIN_USUARIO.ban_usuario == 0)
     {
-        mensaje("DEBE DE INICIAR SECCION");
+        mensaje("DEBE DE INICIAR SESION");
     }
     else
     {
@@ -1232,7 +1232,7 @@ void ejecutar_mkfile(MKFILE* tmp)
             contenido[i] = '\0';
         }
 
-        if (tmp->ban_cont == 1)
+        if (tmp->ban_cont == 1 && tmp->ban_size == 0)
         {
             FILE* archivo_pc;
             char caracter;
@@ -1372,7 +1372,7 @@ void ejecutar_mkdir(MKDIR* tmp)
 {
     if (LOGIN_USUARIO.ban_usuario == 0)
     {
-        mensaje("DEBE DE INICIAR SECCION");
+        mensaje("DEBE DE INICIAR SESION");
     }
     else
     {
